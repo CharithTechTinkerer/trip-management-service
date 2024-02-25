@@ -46,7 +46,7 @@ public class TestController {
 	@GetMapping("/get-test")
 	public ResponseEntity<String> getUser() {
 
-		return ResponseEntity.ok("Deployment Success Trip Management!");
+		return ResponseEntity.ok("Deployment Success Trip Management API Gateway!");
 	}
 
 	private testDto convertEntityToDto(Test user) {
