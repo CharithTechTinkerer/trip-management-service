@@ -3,7 +3,7 @@ package com.sep.tripmanagementservice.configuration.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sep.tripmanagementservice.configuration.entity.test.Test;
+import com.sep.tripmanagementservice.configuration.entity.systemadmin.Test;
 import com.sep.tripmanagementservice.configuration.repository.TestRepository;
 import com.sep.tripmanagementservice.configuration.service.TestService;
 

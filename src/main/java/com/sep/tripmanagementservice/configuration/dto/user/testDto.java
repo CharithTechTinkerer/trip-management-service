@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.dto.test;
+package com.sep.tripmanagementservice.configuration.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
