@@ -1,6 +1,6 @@
 package com.sep.tripmanagementservice.configuration.service;
 
-import com.sep.tripmanagementservice.configuration.entity.test.Test;
+import com.sep.tripmanagementservice.configuration.entity.systemadmin.Test;
 
 public interface TestService {
 

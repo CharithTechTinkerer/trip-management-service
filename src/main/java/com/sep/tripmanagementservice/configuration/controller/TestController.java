@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sep.tripmanagementservice.configuration.codes.ResponseCodes;
 import com.sep.tripmanagementservice.configuration.dto.response.ResponseDto;
-import com.sep.tripmanagementservice.configuration.dto.test.testDto;
-import com.sep.tripmanagementservice.configuration.entity.test.Test;
+import com.sep.tripmanagementservice.configuration.dto.user.testDto;
+import com.sep.tripmanagementservice.configuration.entity.systemadmin.Test;
 import com.sep.tripmanagementservice.configuration.service.TestService;
 
 @CrossOrigin("*")
@@ -46,7 +46,7 @@ public class TestController {
 	@GetMapping("/get-test")
 	public ResponseEntity<String> getUser() {
 
-		return ResponseEntity.ok("Deployment Success Trip Management!");
+		return ResponseEntity.ok("Deployment Success Trip Management API Gateway!");
 	}
 
 	private testDto convertEntityToDto(Test user) {
