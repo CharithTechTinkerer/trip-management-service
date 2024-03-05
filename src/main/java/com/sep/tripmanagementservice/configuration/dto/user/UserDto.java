@@ -1,6 +1,11 @@
 package com.sep.tripmanagementservice.configuration.dto.user;
 
-import com.sep.tripmanagementservice.configuration.enums.Roles;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sep.tripmanagementservice.configuration.enums.Gender;
+import com.sep.tripmanagementservice.configuration.enums.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
 	private Long id;
@@ -21,6 +27,16 @@ public class UserDto {
 
 	private String email;
 
+	private String userName;
+
+	private String nic;
+
+	private Gender gender;
+
+	private String salutation;
+
+	private LocalDate dateOfBirth;
+
 	private String contactNo;
 
 	private String addressLine1;
@@ -29,13 +45,15 @@ public class UserDto {
 
 	private String addressLine3;
 
-	private String userName;
-
 	private String password;
 
-//	private Set<Role> role;
+	private String role;
 
-	private Roles role;
+	private Status status;
+
+	private LocalDateTime createdDate;
+
+	private LocalDateTime updatedDate;
 
 	private String masterToken;
 

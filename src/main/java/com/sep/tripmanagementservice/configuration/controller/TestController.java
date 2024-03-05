@@ -2,6 +2,8 @@ package com.sep.tripmanagementservice.configuration.controller;
 
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,33 +14,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sep.tripmanagementservice.configuration.codes.ResponseCodes;
-import com.sep.tripmanagementservice.configuration.dto.response.ResponseDto;
+import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
 import com.sep.tripmanagementservice.configuration.dto.user.testDto;
 import com.sep.tripmanagementservice.configuration.entity.systemadmin.Test;
+import com.sep.tripmanagementservice.configuration.exception.TSMSError;
+import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.TestService;
+import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/v1/private/test")
+@RequestMapping("/api/v1/private/test")
 public class TestController {
 
 	@Autowired
 	private TestService service;
 
-	@PostMapping
-	public ResponseEntity<ResponseDto<testDto>> saveUser(@RequestParam("requestId") String requestId,
-			@RequestBody testDto userDto) {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
-		ResponseDto<testDto> response = new ResponseDto<>();
-		response.setRequestId(requestId);
+	@PostMapping
+	public ResponseEntity<TSMSResponse> saveTest(@RequestParam("requestId") String requestId,
+			@RequestBody testDto userDto) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [REST-LAYER] [RequestId={}] saveTest: request={}", requestId,
+				CommonUtils.convertToString(userDto));
+
+		TSMSResponse response = new TSMSResponse();
+
+		if (!CommonUtils.checkMandtoryFieldsNullOrEmpty(userDto)) {
+			throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
+		}
 
 		// Service Call Test.
 		testDto dto = convertEntityToDto(service.save(convertDtoToEntity(userDto), requestId));
+		response.setRequestId(requestId);
 		response.setData(dto);
 		response.setMessage("Test Saved Successfully");
-		response.setStatusCode(ResponseCodes.OK.code());
+		response.setStatus(TSMSError.OK.getStatus());
 		response.setTimestamp(LocalDateTime.now().toString());
+
+		LOGGER.info("END [REST-LAYER] [RequestId={}] saveTest: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
 
 		return ResponseEntity.ok(response);
 	}
