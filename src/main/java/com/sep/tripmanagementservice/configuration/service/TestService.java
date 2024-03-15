@@ -4,6 +4,6 @@ import com.sep.tripmanagementservice.configuration.controller.entity.Test;
 
 public interface TestService {
 
-	public Test save(Test test, String requestId);
+	public Test save(Test test, String requestId) throws TSMSException;
 
 }
