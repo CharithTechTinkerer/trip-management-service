@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.entity.user;
+package com.sep.tripmanagementservice.configuration.controller.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +21,7 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Table(name = "users")
 public class User {
 

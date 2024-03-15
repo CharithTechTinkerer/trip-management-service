@@ -1,11 +1,11 @@
 package com.sep.tripmanagementservice.configuration.service.impl;
 
+import com.sep.tripmanagementservice.configuration.controller.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepo;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;

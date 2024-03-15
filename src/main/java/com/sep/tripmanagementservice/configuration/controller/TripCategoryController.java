@@ -7,9 +7,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.sep.tripmanagementservice.configuration.codes.ResponseCodes;
+import com.sep.tripmanagementservice.configuration.controller.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.dto.response.ResponseDto;
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

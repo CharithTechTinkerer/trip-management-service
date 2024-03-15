@@ -1,4 +1,5 @@
-package com.sep.tripmanagementservice.configuration.entity.tripcategory;
+package com.sep.tripmanagementservice.configuration.controller.entity;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -41,4 +42,3 @@ public class TripCategory {
     private LocalDateTime removed_at;
 
 }
-

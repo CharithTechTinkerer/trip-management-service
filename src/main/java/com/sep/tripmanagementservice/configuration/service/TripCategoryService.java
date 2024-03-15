@@ -1,7 +1,7 @@
 package com.sep.tripmanagementservice.configuration.service;
 
+import com.sep.tripmanagementservice.configuration.controller.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
