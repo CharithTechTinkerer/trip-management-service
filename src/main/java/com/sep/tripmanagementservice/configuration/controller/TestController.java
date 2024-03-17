@@ -35,12 +35,12 @@ public class TestController {
 	@PostMapping
 	public ResponseEntity<TSMSResponse> saveTest(@RequestParam("requestId") String requestId,
 			@RequestBody testDto userDto) throws TSMSException {
-
+		TSMSResponse response = new TSMSResponse();
 		long startTime = System.currentTimeMillis();
 		LOGGER.info("START [REST-LAYER] [RequestId={}] saveTest: request={}", requestId,
 				CommonUtils.convertToString(userDto));
 
-		TSMSResponse response = new TSMSResponse();
+
 
 		if (!CommonUtils.checkMandtoryFieldsNullOrEmpty(userDto)) {
 			throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
@@ -83,5 +83,18 @@ public class TestController {
 
 		return test;
 	}
+	
+	// Method to check if user role is system admin
+    private boolean checkUserRoleIsSystemAdmin(String requestId) throws TSMSException {
+        // Your implementation to check if user has the role of system admin
+        // Example: You may check this using user roles stored in database or via some authentication mechanism
+        // For now, I'm assuming a simple check
+		if (requestId.equals("system-admin")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+    }
 
 }
