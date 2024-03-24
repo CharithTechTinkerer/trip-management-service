@@ -15,6 +15,5 @@ public interface TripCategoryService {
 
     TripCategory deleteCategory(Long categoryId);
 
-	TripCategory updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, 
-			String requestId);
+	TripCategory updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, String requestId);
 }
