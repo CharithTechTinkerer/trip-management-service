@@ -7,11 +7,8 @@ import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepo;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class TripCategoryServiceImpl implements TripCategoryService{

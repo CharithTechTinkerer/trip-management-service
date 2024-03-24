@@ -1,7 +1,6 @@
 package com.sep.tripmanagementservice.configuration.dto.tripcategory;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
