@@ -13,16 +13,16 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Data
 @Entity
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="TRIP_CATEGORIES")
+@Table(name="Trip_Categories")
 public class TripCategory {
     @Id
     @GeneratedValue(generator = "uuid2")
