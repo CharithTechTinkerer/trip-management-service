@@ -2,11 +2,12 @@ package com.sep.tripmanagementservice.configuration.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategoryRepository;
+import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
@@ -32,11 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class TripCategoryController {
 
     @Autowired
-    TripCategoryService service;
+    private TripCategoryService service;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(TripCategoryController.class);
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<TSMSResponse> saveTripCategory(@RequestParam("requestId") String requestId, @RequestBody TripCategoryDto tripcategoryDto) throws TSMSException{
 		
 		TSMSResponse response = new TSMSResponse();
@@ -46,9 +47,6 @@ public class TripCategoryController {
 			LOGGER.info("START [REST-LAYER] [RequestId={}] saveTripCategory: request={}", requestId,
 					CommonUtils.convertToString(tripcategoryDto));
 			
-            if (!checkUserRoleIsSystemAdmin(requestId)) {
-                throw new TSMSException(TSMSError.UNAUTHORIZED);
-            }
 			if (!CommonUtils.checkMandtoryFieldsNullOrEmptyTripCategory(tripcategoryDto)) {
 				throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
 			}
@@ -87,24 +85,23 @@ public class TripCategoryController {
             LOGGER.info("START [REST-LAYER] [RequestId={}] updateTripCategory: request={}",requestId,
                     CommonUtils.convertToString(updatedTripCategoryDto));
             
-            if (!checkUserRoleIsSystemAdmin(requestId)) {
-                throw new TSMSException(TSMSError.UNAUTHORIZED);
-            }
             
-            TripCategoryRepository existingTripCategory = service.getCategoryById(id);
-            if (existingTripCategory == null) {
+            Optional<TripCategory> existingTripCategoryOptional = service.getCategoryById(id);
+            if (existingTripCategoryOptional.isEmpty()) {
                 response.setMessage("TripCategory not found");
                 response.setStatus(TSMSError.NOT_FOUND.getStatus());
                 LOGGER.error("TripCategory not found for id: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
+            TripCategory existingTripCategory = existingTripCategoryOptional.get();
+            
             if (!CommonUtils.checkMandtoryFieldsNullOrEmptyTripCategory(updatedTripCategoryDto)) {
                 throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
             }
 
-            existingTripCategory.setCategory_name(updatedTripCategoryDto.getCategory_name());
-            TripCategoryRepository updatedTripCategory = service.updateCategory(id, updatedTripCategoryDto, requestId);
+            existingTripCategory.setCategoryName(updatedTripCategoryDto.getCategoryName());
+            TripCategory updatedTripCategory = service.updateCategory(id, updatedTripCategoryDto, requestId);
             TripCategoryDto updatedTripCategoryDtoResponse = convertEntityToDto(updatedTripCategory);
 
             response.setData(updatedTripCategoryDtoResponse);
@@ -123,7 +120,6 @@ public class TripCategoryController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-
         }
     }
 
@@ -137,7 +133,7 @@ public class TripCategoryController {
 		LOGGER.info("START [REST-LAYER] [RequestId={}] getAllTripCategories: request={}", requestId,
 				CommonUtils.convertToString(requestId));
         try {
-            List<TripCategoryRepository>tripCategories = service.getAllCategories();
+            List<TripCategory>tripCategories = service.getAllCategories();
             List<TripCategoryDto> tripCategorydtos = tripCategories.stream().map(this::convertEntityToDto).collect(Collectors.toList());
             response.setData(tripCategorydtos);
             response.setMessage("TripCategory List");
@@ -170,11 +166,7 @@ public class TripCategoryController {
 				CommonUtils.convertToString(id));
         try {
         	
-			if (!checkUserRoleIsSystemAdmin(requestId)) {
-				throw new TSMSException(TSMSError.UNAUTHORIZED);
-			}
-        	
-            TripCategoryRepository existingTripCategory = service.getCategoryById(id);
+            Optional<TripCategory> existingTripCategory = service.getCategoryById(id);
 
             if (existingTripCategory != null) {
                 service.deleteCategory(id);
@@ -191,53 +183,36 @@ public class TripCategoryController {
                 LOGGER.error("Error occurred while deleting trip category");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-		} catch (TSMSException e) {
-			response.setMessage(e.getMessage());
-			response.setStatus(TSMSError.UNAUTHORIZED.getStatus());
-			LOGGER.error("User not authorized to delete tripcategory", e);
-			return ResponseEntity.badRequest().body(response);
 		} catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
-    private TripCategoryDto convertEntityToDto(TripCategoryRepository tripcategory) {
+    private TripCategoryDto convertEntityToDto(TripCategory tripcategory) {
 
         TripCategoryDto tripCategoryDto = new TripCategoryDto();
 
         tripCategoryDto.setId(tripcategory.getId());
-        tripCategoryDto.setCategory_name(tripcategory.getCategory_name());
+        tripCategoryDto.setCategoryName(tripcategory.getCategoryName());
         tripCategoryDto.setDescription(tripcategory.getDescription());
         tripCategoryDto.setCode(tripcategory.getCode());
         tripCategoryDto.setStatus(tripcategory.isStatus());
-        tripCategoryDto.setAdded_at(tripcategory.getAdded_at());
-        tripCategoryDto.setRemoved_at(tripcategory.getRemoved_at());
+        tripCategoryDto.setAddedAt(tripcategory.getAdded_at());
+        tripCategoryDto.setRemovedAt(tripcategory.getRemoved_at());
 
         return tripCategoryDto;
     }
 
-    private TripCategoryRepository convertDtoToEntity(TripCategoryDto tripCategoryDto) {
-        TripCategoryRepository tripcategory = new TripCategoryRepository();
+    private TripCategory convertDtoToEntity(TripCategoryDto tripCategoryDto) {
+        TripCategory tripcategory = new TripCategory();
         tripcategory.setId(tripCategoryDto.getId());
-        tripcategory.setCategory_name(tripCategoryDto.getCategory_name());
+        tripcategory.setCategoryName(tripCategoryDto.getCategoryName());
         tripcategory.setDescription(tripCategoryDto.getDescription());
         tripcategory.setCode(tripCategoryDto.getCode());
         tripcategory.setStatus(tripCategoryDto.isStatus());
-        tripcategory.setAdded_at(tripCategoryDto.getAdded_at());
-        tripcategory.setRemoved_at(tripCategoryDto.getRemoved_at());
+        tripcategory.setAdded_at(tripCategoryDto.getAddedAt());
+        tripcategory.setRemoved_at(tripCategoryDto.getRemovedAt());
 
         return tripcategory;
-    }
-    
-    private boolean checkUserRoleIsSystemAdmin(String requestId) throws TSMSException {
-        // Your implementation to check if user has the role of system admin
-        // Example: You may check this using user roles stored in database or via some authentication mechanism
-        // For now, I'm assuming a simple check
-		if (requestId.equals("systemadmin")) {
-			return true;
-		} else {
-			return false;
-		}
-
     }
 }

@@ -17,10 +17,10 @@ import lombok.Setter;
 public class TripCategoryDto {
 
     private Long id;
-    private String category_name;
+    private String categoryName;
     private String code;
     private String description;
     private boolean status;
-    private LocalDateTime added_at;
-    private LocalDateTime removed_at;
+    private LocalDateTime addedAt;
+    private LocalDateTime removedAt;
 }

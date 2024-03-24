@@ -2,27 +2,25 @@ package com.sep.tripmanagementservice.configuration.service.impl;
 
 
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategoryRepository;
+import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
+import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepository;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepo;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TripCategoryServiceImpl implements TripCategoryService{
 
     @Autowired
-    private TripCategoryRepo repository;
-
-    public TripCategoryServiceImpl(TripCategoryRepo repository) {
-        this.repository = repository;
-    }
+    private TripCategoryRepository repository;
 
     @Override
-    public TripCategoryRepository save(TripCategoryRepository tripcategory, String requestId) {
-        TripCategoryRepository tripCategoryResponse = new TripCategoryRepository();
+    public TripCategory save(TripCategory tripcategory, String requestId) {
+        TripCategory tripCategoryResponse = new TripCategory();
         try {
             tripCategoryResponse = repository.save(tripcategory);
         } catch (Exception e) {
@@ -33,23 +31,30 @@ public class TripCategoryServiceImpl implements TripCategoryService{
     }
 
     @Override
-    public List<TripCategoryRepository> getAllCategories(){
-        return repository.findAll();
+    public List<TripCategory> getAllCategories(){
+        List<TripCategory> categoryList = repository.findAll();
+        
+        return categoryList;
+
     }
 
+
     @Override
-	public TripCategoryRepository getCategoryById(Long categoryId) {
-		return repository.findById(categoryId).orElse(null);
+	public Optional<TripCategory> getCategoryById(Long categoryId) {
+    	Optional<TripCategory> category = repository.findById(categoryId);
+    	
+		return category;
 	}
+    
     @Override
-    public TripCategoryRepository updateCategory(Long categoryId, TripCategoryDto updatedTripCategoryDto, String requestId) {
+    public TripCategory updateCategory(Long categoryId, TripCategoryDto updatedTripCategoryDto, String requestId) {
         // Get the existing category by ID
-		TripCategoryRepository existingCategory = repository.findById(categoryId).orElse(null);
+		TripCategory existingCategory = repository.findById(categoryId).orElse(null);
 
         // Check if the category exists
         if (existingCategory != null) {
             // Update the existing category with new values
-            existingCategory.setCategory_name(updatedTripCategoryDto.getCategory_name());
+            existingCategory.setCategoryName(updatedTripCategoryDto.getCategoryName());
             // You can update other fields similarly
 
             // Save the updated category
@@ -63,9 +68,9 @@ public class TripCategoryServiceImpl implements TripCategoryService{
 
 
     @Override
-    public TripCategoryRepository deleteCategory(Long categoryId) {
+    public TripCategory deleteCategory(Long categoryId) {
         // Get the existing category by ID
-        TripCategoryRepository tripCategoryToDelete = repository.findById(categoryId)
+        TripCategory tripCategoryToDelete = repository.findById(categoryId)
                 .orElse(null);
 
         // Check if the category exists

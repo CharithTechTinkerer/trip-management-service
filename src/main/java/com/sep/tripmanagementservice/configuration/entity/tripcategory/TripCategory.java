@@ -19,13 +19,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="TRIP_CATEGORIES")
-public class TripCategoryRepository {
+@Table(name="Trip_Category")
+public class TripCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name="categoryName", nullable=false)
-    private String category_name;
+    @Column(name="category_name", nullable=false)
+    private String categoryName;
     @Column(name="description", nullable=false)
     private String description;
     @Column(name="code", nullable=false)

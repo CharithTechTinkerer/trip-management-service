@@ -1,18 +1,19 @@
 package com.sep.tripmanagementservice.configuration.service;
 
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategoryRepository;
+import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TripCategoryService {
-    TripCategoryRepository save(TripCategoryRepository tripcategory, String requestId);
+    TripCategory save(TripCategory tripcategory, String requestId);
 
-    List<TripCategoryRepository> getAllCategories();
+    List<TripCategory> getAllCategories();
 
-    TripCategoryRepository getCategoryById(Long categoryId);
+    Optional<TripCategory> getCategoryById(Long categoryId);
 
-    TripCategoryRepository deleteCategory(Long categoryId);
+    TripCategory deleteCategory(Long categoryId);
 
-	TripCategoryRepository updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, String requestId);
+	TripCategory updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, String requestId);
 }
