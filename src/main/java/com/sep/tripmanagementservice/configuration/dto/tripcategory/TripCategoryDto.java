@@ -17,7 +17,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TripCategoryDto {
 
-    private UUID id;
+    private Long id;
     private String category_name;
     private String code;
     private String description;

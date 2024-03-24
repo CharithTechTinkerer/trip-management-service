@@ -1,30 +1,30 @@
 package com.sep.tripmanagementservice.configuration.entity.tripcategory;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-@Data
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="TRIP_CATEGORIES")
-public class TripCategory {
+public class TripCategoryRepository {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name="uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
-    @Column(name="category_name", nullable=false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column(name="categoryName", nullable=false)
     private String category_name;
     @Column(name="description", nullable=false)
     private String description;
@@ -32,9 +32,9 @@ public class TripCategory {
     private String code;
     @Column(name="status")
     private boolean status;
-    @Column(name="added_at", nullable=false)
+    @Column(name="addedAt", nullable=false)
     private LocalDateTime added_at;
-    @Column(name="removed_at", nullable=true)
+    @Column(name="removedAt", nullable=true)
     private LocalDateTime removed_at;
 
 }

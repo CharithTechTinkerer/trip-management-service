@@ -1,10 +1,10 @@
 package com.sep.tripmanagementservice.configuration.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
+import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategoryRepository;
 
-import java.util.UUID;
-
-public interface TripCategoryRepo extends JpaRepository<TripCategory, UUID> {
+@Repository
+public interface TripCategoryRepo extends JpaRepository<TripCategoryRepository, Long> {
 }

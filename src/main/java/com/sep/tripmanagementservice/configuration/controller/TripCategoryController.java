@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
+import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategoryRepository;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
@@ -78,15 +78,15 @@ public class TripCategoryController {
 			return ResponseEntity.badRequest().build();
 		}
     }
-
+    
     @PutMapping("/{id}")
-    public ResponseEntity<TSMSResponse> updateTripCategory(@PathVariable UUID id, @RequestBody TripCategoryDto updatedTripCategoryDto, 
-    		@RequestParam("requestId") String requestId) throws TSMSException {
+    public ResponseEntity<TSMSResponse> updateTripCategory(@PathVariable Long id, @RequestBody TripCategoryDto updatedTripCategoryDto, 
+            @RequestParam("requestId") String requestId) throws TSMSException {
 
-    	TSMSResponse response = new TSMSResponse();
+        TSMSResponse response = new TSMSResponse();
         try {
-        	
-        	long startTime = System.currentTimeMillis();
+
+            long startTime = System.currentTimeMillis();
             LOGGER.info("START [REST-LAYER] [RequestId={}] updateTripCategory: request={}",requestId,
                     CommonUtils.convertToString(updatedTripCategoryDto));
             
@@ -94,31 +94,29 @@ public class TripCategoryController {
                 throw new TSMSException(TSMSError.UNAUTHORIZED);
             }
             
-            Optional<TripCategory> existingTripCategory = service.getCategoryById(id);
-            if (!CommonUtils.checkMandtoryFieldsNullOrEmptyTripCategory(updatedTripCategoryDto)) {
-            	                throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
-            }
-
-            if (existingTripCategory.isPresent()) {
-
-                TripCategory tripCategory = existingTripCategory.get();
-                tripCategory.setCategory_name(updatedTripCategoryDto.getCategory_name());
-                TripCategory updatedTripCategory = service.updateCategory(existingTripCategory, updatedTripCategoryDto, "reqeuestId");
-                TripCategoryDto updatedTripCategoryDtoResponse = convertEntityToDto(updatedTripCategory);
-
-                response.setData(updatedTripCategoryDtoResponse);
-                response.setMessage("TripCategory updated successfully");
-                response.setStatus(TSMSError.OK.getStatus());
-                response.setTimestamp(LocalDateTime.now().toString());
-				LOGGER.info("END [REST-LAYER] [RequestId={}] updateTripCategory: timeTaken={}|response={}", requestId,
-						CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
-                return ResponseEntity.ok(response);
-            } else {
+            TripCategoryRepository existingTripCategory = service.getCategoryById(id);
+            if (existingTripCategory == null) {
                 response.setMessage("TripCategory not found");
                 response.setStatus(TSMSError.NOT_FOUND.getStatus());
-                LOGGER.error("Error occurred while updating trip category");
+                LOGGER.error("TripCategory not found for id: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
+
+            if (!CommonUtils.checkMandtoryFieldsNullOrEmptyTripCategory(updatedTripCategoryDto)) {
+                throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
+            }
+
+            existingTripCategory.setCategory_name(updatedTripCategoryDto.getCategory_name());
+            TripCategoryRepository updatedTripCategory = service.updateCategory(id, updatedTripCategoryDto, requestId);
+            TripCategoryDto updatedTripCategoryDtoResponse = convertEntityToDto(updatedTripCategory);
+
+            response.setData(updatedTripCategoryDtoResponse);
+            response.setMessage("TripCategory updated successfully");
+            response.setStatus(TSMSError.OK.getStatus());
+            response.setTimestamp(LocalDateTime.now().toString());
+            LOGGER.info("END [REST-LAYER] [RequestId={}] updateTripCategory: timeTaken={}|response={}", requestId,
+                    CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+            return ResponseEntity.ok(response);
 
         } catch (TSMSException e) {
             response.setMessage(e.getMessage());
@@ -128,7 +126,7 @@ public class TripCategoryController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-  
+
         }
     }
 
@@ -142,7 +140,7 @@ public class TripCategoryController {
 		LOGGER.info("START [REST-LAYER] [RequestId={}] getAllTripCategories: request={}", requestId,
 				CommonUtils.convertToString(requestId));
         try {
-            List<TripCategory>tripCategories = service.getAllCategories();
+            List<TripCategoryRepository>tripCategories = service.getAllCategories();
             List<TripCategoryDto> tripCategorydtos = tripCategories.stream().map(this::convertEntityToDto).collect(Collectors.toList());
             response.setData(tripCategorydtos);
             response.setMessage("TripCategory List");
@@ -166,7 +164,7 @@ public class TripCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TSMSResponse> deleteTripCategory(@PathVariable UUID id, String requestId) {
+    public ResponseEntity<TSMSResponse> deleteTripCategory(@PathVariable Long id, String requestId) {
     	
         TSMSResponse response = new TSMSResponse();
         
@@ -179,9 +177,9 @@ public class TripCategoryController {
 				throw new TSMSException(TSMSError.UNAUTHORIZED);
 			}
         	
-            Optional<TripCategory> existingTripCategory = service.getCategoryById(id);
+            TripCategoryRepository existingTripCategory = service.getCategoryById(id);
 
-            if (existingTripCategory.isPresent()) {
+            if (existingTripCategory != null) {
                 service.deleteCategory(id);
                 response.setMessage("Trip Category Deleted Successfully");
                 response.setSuccess(true);
@@ -206,7 +204,7 @@ public class TripCategoryController {
             return ResponseEntity.badRequest().build();
         }
     }
-    private TripCategoryDto convertEntityToDto(TripCategory tripcategory) {
+    private TripCategoryDto convertEntityToDto(TripCategoryRepository tripcategory) {
 
         TripCategoryDto tripCategoryDto = new TripCategoryDto();
 
@@ -221,8 +219,8 @@ public class TripCategoryController {
         return tripCategoryDto;
     }
 
-    private TripCategory convertDtoToEntity(TripCategoryDto tripCategoryDto) {
-        TripCategory tripcategory = new TripCategory();
+    private TripCategoryRepository convertDtoToEntity(TripCategoryDto tripCategoryDto) {
+        TripCategoryRepository tripcategory = new TripCategoryRepository();
         tripcategory.setId(tripCategoryDto.getId());
         tripcategory.setCategory_name(tripCategoryDto.getCategory_name());
         tripcategory.setDescription(tripCategoryDto.getDescription());

@@ -1,7 +1,7 @@
 package com.sep.tripmanagementservice.configuration.service;
 
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
+import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategoryRepository;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TripCategoryService {
-    TripCategory save(TripCategory tripcategory, String requestId);
+    TripCategoryRepository save(TripCategoryRepository tripcategory, String requestId);
 
-    List<TripCategory> getAllCategories();
+    List<TripCategoryRepository> getAllCategories();
 
-    Optional<TripCategory> getCategoryById(UUID categoryId);
+    TripCategoryRepository getCategoryById(Long categoryId);
 
-    TripCategory updateCategory(Optional<TripCategory> existingTripCategory, @RequestBody TripCategoryDto updatedTripCategoryDto, String requestId);
+    TripCategoryRepository deleteCategory(Long categoryId);
 
-    TripCategory deleteCategory(UUID categoryId);
+	TripCategoryRepository updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, String requestId);
 }
