@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.controller.entity;
+package com.sep.tripmanagementservice.configuration.controller.entity.sysadmin;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
