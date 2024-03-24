@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.controller.entity;
+package com.sep.tripmanagementservice.configuration.entity.tripcategory;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
