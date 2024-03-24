@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/private/tripcategories")
+@RequestMapping("/api/v1/private/tripcategories")
 public class TripCategoryController {
 
     @Autowired
@@ -124,7 +124,7 @@ public class TripCategoryController {
     }
 
 
-    @GetMapping
+    @GetMapping("/get-all")
     public ResponseEntity<TSMSResponse> getAllTripCategories(String requestId){
 
         TSMSResponse response = new TSMSResponse();
@@ -197,8 +197,8 @@ public class TripCategoryController {
         tripCategoryDto.setDescription(tripcategory.getDescription());
         tripCategoryDto.setCode(tripcategory.getCode());
         tripCategoryDto.setStatus(tripcategory.isStatus());
-        tripCategoryDto.setAddedAt(tripcategory.getAdded_at());
-        tripCategoryDto.setRemovedAt(tripcategory.getRemoved_at());
+        tripCategoryDto.setAddedAt(tripcategory.getAddedAt());
+        tripCategoryDto.setRemovedAt(tripcategory.getRemovedAt());
 
         return tripCategoryDto;
     }
@@ -210,8 +210,8 @@ public class TripCategoryController {
         tripcategory.setDescription(tripCategoryDto.getDescription());
         tripcategory.setCode(tripCategoryDto.getCode());
         tripcategory.setStatus(tripCategoryDto.isStatus());
-        tripcategory.setAdded_at(tripCategoryDto.getAddedAt());
-        tripcategory.setRemoved_at(tripCategoryDto.getRemovedAt());
+        tripcategory.setAddedAt(tripCategoryDto.getAddedAt());
+        tripcategory.setRemovedAt(tripCategoryDto.getRemovedAt());
 
         return tripcategory;
     }

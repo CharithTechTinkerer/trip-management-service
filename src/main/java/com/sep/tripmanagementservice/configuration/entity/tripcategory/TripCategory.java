@@ -32,9 +32,9 @@ public class TripCategory {
     private String code;
     @Column(name="status")
     private boolean status;
-    @Column(name="addedAt", nullable=false)
-    private LocalDateTime added_at;
-    @Column(name="removedAt", nullable=true)
-    private LocalDateTime removed_at;
+    @Column(name="added_at", nullable=false)
+    private LocalDateTime addedAt;
+    @Column(name="removed_at", nullable=true)
+    private LocalDateTime removedAt;
 
 }
