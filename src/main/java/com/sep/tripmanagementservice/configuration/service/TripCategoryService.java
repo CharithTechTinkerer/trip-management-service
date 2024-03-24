@@ -14,7 +14,7 @@ public interface TripCategoryService {
     Optional<TripCategory> getCategoryById(Long categoryId);
 
     TripCategory deleteCategory(Long categoryId);
-
-	TripCategory updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, 
+    
+    TripCategory updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, 
 			String requestId);
 }
