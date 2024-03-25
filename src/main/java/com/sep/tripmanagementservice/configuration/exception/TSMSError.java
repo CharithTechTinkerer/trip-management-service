@@ -24,7 +24,9 @@ public enum TSMSError {
 	INVALID_EMAIL("020", 400, "Invalid Email Address"),
 	INVALID_USERNAME("022", 400, "Invalid UserName"),
 	EMAIL_EXIST("023", 409, "An account associated with this email already exists"),
-	USERNAME_EXIST("024", 409, "An account associated with this username already exists");
+	USERNAME_EXIST("024", 409, "An account associated with this username already exists"),
+	UNAUTHORIZED("025", 401, "Unauthorized");
+	
 
 	private int status;
 	private String code;

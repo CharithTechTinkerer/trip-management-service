@@ -35,12 +35,12 @@ public class TestController {
 	@PostMapping
 	public ResponseEntity<TSMSResponse> saveTest(@RequestParam("requestId") String requestId,
 			@RequestBody testDto userDto) throws TSMSException {
-
+		TSMSResponse response = new TSMSResponse();
 		long startTime = System.currentTimeMillis();
 		LOGGER.info("START [REST-LAYER] [RequestId={}] saveTest: request={}", requestId,
 				CommonUtils.convertToString(userDto));
 
-		TSMSResponse response = new TSMSResponse();
+
 
 		if (!CommonUtils.checkMandtoryFieldsNullOrEmpty(userDto)) {
 			throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);

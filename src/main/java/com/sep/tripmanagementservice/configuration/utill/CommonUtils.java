@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.dto.user.testDto;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
@@ -110,8 +111,18 @@ public class CommonUtils {
 
 	public static boolean checkMandtoryFieldsNullOrEmpty(testDto testDto) {
 		return !((testDto.getName() == null || testDto.getName().isEmpty() || testDto.getName().isBlank()
-				|| testDto.getName().equals(""))
+						|| testDto.getName().equals(""))
 				|| (testDto.getAddress() == null || testDto.getAddress().isEmpty() || testDto.getAddress().isBlank()
 						|| testDto.getAddress().equals("")));
+	}
+	public static boolean checkMandtoryFieldsNullOrEmptyTripCategory(TripCategoryDto tripcategorydto) {
+		return !((tripcategorydto.getCategoryName() == null || tripcategorydto.getCategoryName().isEmpty() || tripcategorydto.getCategoryName().isBlank()
+						|| tripcategorydto.getCategoryName().equals(""))
+				|| (tripcategorydto.getDescription() == null || tripcategorydto.getDescription().isEmpty() || tripcategorydto.getDescription().isBlank()
+						|| tripcategorydto.getDescription().equals(""))
+				|| (tripcategorydto.getCode() == null || tripcategorydto.getCode().isEmpty() || tripcategorydto.getCode().isBlank()
+						|| tripcategorydto.getCode().equals(""))
+				|| (tripcategorydto.getAddedAt() == null || tripcategorydto.getCode().isEmpty() || tripcategorydto.getCode().isBlank()
+						|| tripcategorydto.getCode().equals("")));
 	}
 }
