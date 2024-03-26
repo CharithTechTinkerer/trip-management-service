@@ -116,13 +116,13 @@ public class CommonUtils {
 						|| testDto.getAddress().equals("")));
 	}
 	public static boolean checkMandtoryFieldsNullOrEmptyTripCategory(TripCategoryDto tripcategorydto) {
-		return !((tripcategorydto.getCategory_name() == null || tripcategorydto.getCategory_name().isEmpty() || tripcategorydto.getCategory_name().isBlank()
-						|| tripcategorydto.getCategory_name().equals(""))
+		return !((tripcategorydto.getCategoryName() == null || tripcategorydto.getCategoryName().isEmpty() || tripcategorydto.getCategoryName().isBlank()
+						|| tripcategorydto.getCategoryName().equals(""))
 				|| (tripcategorydto.getDescription() == null || tripcategorydto.getDescription().isEmpty() || tripcategorydto.getDescription().isBlank()
 						|| tripcategorydto.getDescription().equals(""))
 				|| (tripcategorydto.getCode() == null || tripcategorydto.getCode().isEmpty() || tripcategorydto.getCode().isBlank()
 						|| tripcategorydto.getCode().equals(""))
-				|| (tripcategorydto.getAdded_at() == null || tripcategorydto.getCode().isEmpty() || tripcategorydto.getCode().isBlank()
+				|| (tripcategorydto.getAddedAt() == null || tripcategorydto.getCode().isEmpty() || tripcategorydto.getCode().isBlank()
 						|| tripcategorydto.getCode().equals("")));
 	}
 }
