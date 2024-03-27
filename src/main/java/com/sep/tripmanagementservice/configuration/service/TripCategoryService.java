@@ -1,7 +1,7 @@
 package com.sep.tripmanagementservice.configuration.service;
 
-import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
+import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.entity.TripCategory;
 
 import java.util.List;
 import java.util.Optional;

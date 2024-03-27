@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.dto.user;
+package com.sep.tripmanagementservice.configuration.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

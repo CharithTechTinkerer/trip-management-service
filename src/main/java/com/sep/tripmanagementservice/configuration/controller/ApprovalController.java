@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sep.tripmanagementservice.configuration.dto.approval.ApprovalDto;
+import com.sep.tripmanagementservice.configuration.dto.ApprovalDto;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
-import com.sep.tripmanagementservice.configuration.entity.approval.Approval;
+import com.sep.tripmanagementservice.configuration.entity.Approval;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;

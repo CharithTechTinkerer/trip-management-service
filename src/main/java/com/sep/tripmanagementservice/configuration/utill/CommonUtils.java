@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sep.tripmanagementservice.configuration.dto.approval.ApprovalDto;
-import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.dto.user.testDto;
+import com.sep.tripmanagementservice.configuration.dto.ApprovalDto;
+import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.dto.testDto;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;

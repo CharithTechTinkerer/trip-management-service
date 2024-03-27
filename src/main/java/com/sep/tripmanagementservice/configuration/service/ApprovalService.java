@@ -2,7 +2,7 @@ package com.sep.tripmanagementservice.configuration.service;
 
 import java.util.List;
 
-import com.sep.tripmanagementservice.configuration.entity.approval.Approval;
+import com.sep.tripmanagementservice.configuration.entity.Approval;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 

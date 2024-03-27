@@ -1,8 +1,8 @@
 package com.sep.tripmanagementservice.configuration.service.impl;
 
 
-import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.tripcategory.TripCategory;
+import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepository;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
