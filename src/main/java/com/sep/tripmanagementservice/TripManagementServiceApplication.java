@@ -10,8 +10,4 @@ public class TripManagementServiceApplication {
 		SpringApplication.run(TripManagementServiceApplication.class, args);
 	}
 
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
 }

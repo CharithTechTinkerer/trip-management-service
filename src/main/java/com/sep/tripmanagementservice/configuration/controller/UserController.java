@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +31,8 @@ public class UserController {
 	@Autowired
 	private UserService service;
 
-//	@Autowired
-//	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -157,9 +158,9 @@ public class UserController {
 		user.setAddressLine2(userDto.getAddressLine2());
 		user.setAddressLine3(userDto.getAddressLine3());
 
-//		if (userDto.getPassword() != null) {
-//			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-//		}
+		if (userDto.getPassword() != null) {
+			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		}
 
 		return user;
 	}
@@ -178,7 +179,7 @@ public class UserController {
 		userDto.setAddressLine1(user.getAddressLine1());
 		userDto.setAddressLine2(user.getAddressLine2());
 		userDto.setAddressLine3(user.getAddressLine3());
-//		userDto.setPassword(passwordEncoder.encode(user.getPassword()));
+		userDto.setPassword(passwordEncoder.encode(user.getPassword()));
 		userDto.setRole(user.getRole().name());
 		userDto.setProfilePictureUrl(user.getProfilePictureUrl());
 
