@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.sep.tripmanagementservice.configuration.controller.entity.tripcategory.TripCategory;
 import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
-import com.sep.tripmanagementservice.configuration.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;

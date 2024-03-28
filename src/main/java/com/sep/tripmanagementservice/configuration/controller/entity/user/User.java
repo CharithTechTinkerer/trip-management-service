@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.controller.entity;
+package com.sep.tripmanagementservice.configuration.controller.entity.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

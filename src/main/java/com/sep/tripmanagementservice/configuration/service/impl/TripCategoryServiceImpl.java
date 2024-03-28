@@ -1,8 +1,8 @@
 package com.sep.tripmanagementservice.configuration.service.impl;
 
 
+import com.sep.tripmanagementservice.configuration.controller.entity.tripcategory.TripCategory;
 import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepository;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +56,9 @@ public class TripCategoryServiceImpl implements TripCategoryService{
             // Update the existing category with new values
             existingCategory.setCategoryName(updatedTripCategoryDto.getCategoryName());
             // You can update other fields similarly
+            existingCategory.setDescription(updatedTripCategoryDto.getDescription());
+            existingCategory.setStatus(updatedTripCategoryDto.isStatus());
+            existingCategory.setRemovedAt(updatedTripCategoryDto.getRemovedAt());
 
             // Save the updated category
             return repository.save(existingCategory);

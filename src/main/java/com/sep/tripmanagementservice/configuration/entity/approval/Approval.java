@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.entity;
+package com.sep.tripmanagementservice.configuration.entity.approval;
 
 import java.time.LocalDateTime;
 
