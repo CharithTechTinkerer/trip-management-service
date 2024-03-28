@@ -91,7 +91,7 @@ public class UserController {
 			throw new TSMSException(TSMSError.INVALID_PASSWORD);
 		}
 
-		// Service Call Test.
+		// Service Call.
 		UserDto dto = convertEntityToDto(service.update(convertDtoToEntity(userDto), userDto.getProfilePictureName(),
 				userDto.getProfilePictureContent(), requestId));
 
