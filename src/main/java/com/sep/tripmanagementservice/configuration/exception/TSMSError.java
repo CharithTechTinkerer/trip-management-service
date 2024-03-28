@@ -31,7 +31,12 @@ public enum TSMSError {
 	APPROVAL_REQUEST_NOT_FOUND("028", 404, "Approval Request Not Found"),
 	ID_FIELD_EMPTY("029", 404, "Id Field is Empty"),
 	EMAIL_FIELD_EMPTY("030", 404, "Email Field is Empty"),
-	APPROVAL_STATUS_FIELD_EMPTY("031", 404, "Approval Status Field is Empty");
+	APPROVAL_STATUS_FIELD_EMPTY("031", 404, "Approval Status Field is Empty"),
+	USER_UPDATE_FAILED("032", 404, "User Profile Update Failed"),
+	USERNAME_UPDATE_NOT_ALLOWED("033", 404, "You are not allowed to update the username"),
+	PROFILE_PICTURE_UPLOAD_FAILED("034", 404, "Profile Picture Upload Failed"),
+	APPROVAL_REQUEST_CREATION_FAILED("035", 404, "Approval Request Creation Failed"),
+	PROFILE_PICTURE_DELETE_FAILED("035", 404, "Profile Picture Deletion Failed");
 	
 
 	private int status;
