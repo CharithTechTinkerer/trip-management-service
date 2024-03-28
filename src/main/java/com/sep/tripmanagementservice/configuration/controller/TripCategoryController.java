@@ -3,14 +3,18 @@ package com.sep.tripmanagementservice.configuration.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.sep.tripmanagementservice.configuration.codes.ResponseCodes;
-import com.sep.tripmanagementservice.configuration.controller.entity.TripCategory;
-import com.sep.tripmanagementservice.configuration.dto.response.ResponseDto;
-import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
+import com.sep.tripmanagementservice.configuration.entity.TripCategory;
+import com.sep.tripmanagementservice.configuration.exception.TSMSError;
+import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
+import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,104 +26,166 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/private/tripcategories")
 public class TripCategoryController {
 
     @Autowired
-    TripCategoryService service;
+    private TripCategoryService service;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(TripCategoryController.class);
 
-    @PostMapping
-    public ResponseEntity<ResponseDto<TripCategoryDto>> saveTripCategory(@RequestParam("requestId") String requestId, @RequestBody TripCategoryDto tripcategoryDto){
-        ResponseDto<TripCategoryDto> response = new ResponseDto<>();
-        response.setRequestId(requestId);
-        TripCategoryDto dto = convertEntityToDto(service.save(convertDtoToEntity(tripcategoryDto), requestId));
-        response.setData(dto);
-        response.setMessage("TripCategory Saved Successfully");
-        response.setStatusCode(ResponseCodes.OK.code());
-        response.setTimestamp(LocalDateTime.now().toString());
-
-        return ResponseEntity.ok(response);
+    @PostMapping("/save")
+    public ResponseEntity<TSMSResponse> saveTripCategory(@RequestParam("requestId") String requestId, @RequestBody TripCategoryDto tripcategoryDto) throws TSMSException{
+		
+		TSMSResponse response = new TSMSResponse();
+		try {
+			
+			long startTime = System.currentTimeMillis();
+			LOGGER.info("START [REST-LAYER] [RequestId={}] saveTripCategory: request={}", requestId,
+					CommonUtils.convertToString(tripcategoryDto));
+			
+			if (!CommonUtils.checkMandtoryFieldsNullOrEmptyTripCategory(tripcategoryDto)) {
+				throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
+			}
+			
+	        TripCategoryDto dto = convertEntityToDto(service.save(convertDtoToEntity(tripcategoryDto), requestId));
+	        response.setRequestId(requestId);
+	        response.setData(dto);
+	        response.setMessage("TripCategory Saved Successfully");
+	        response.setStatus(TSMSError.OK.getStatus());
+	        response.setTimestamp(LocalDateTime.now().toString());
+	        
+	        LOGGER.info("END [REST-LAYER] [RequestId={}] saveTripCategory: timeTaken={}|response={}", requestId,
+	        		CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+	
+	        return ResponseEntity.ok(response);
+	        
+		} catch (TSMSException e) {
+			response.setMessage(e.getMessage());
+			response.setStatus(TSMSError.UNAUTHORIZED.getStatus());
+			LOGGER.error("Error occurred while saving trip category", e);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+		} catch (Exception e) {
+			LOGGER.error("Error occurred while saving trip category", e);
+			return ResponseEntity.badRequest().build();
+		}
     }
-
+    
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<TripCategoryDto>> updateTripCategory(@PathVariable UUID id, @RequestBody TripCategoryDto updatedTripCategoryDto){
-        ResponseDto<TripCategoryDto> response = new ResponseDto<>();
+    public ResponseEntity<TSMSResponse> updateTripCategory(@PathVariable Long id, @RequestBody TripCategoryDto updatedTripCategoryDto, 
+            @RequestParam("requestId") String requestId) throws TSMSException {
+
+        TSMSResponse response = new TSMSResponse();
         try {
-            Optional<TripCategory> existingTripCategory = service.getCategoryById(id);
 
-            if (existingTripCategory.isPresent()) {
-
-                TripCategory tripCategory = existingTripCategory.get();
-                tripCategory.setCategory_name(updatedTripCategoryDto.getCategory_name());
-                TripCategory updatedTripCategory = service.updateCategory(existingTripCategory, updatedTripCategoryDto, "reqeuestId");
-                TripCategoryDto updatedTripCategoryDtoResponse = convertEntityToDto(updatedTripCategory);
-
-                response.setData(updatedTripCategoryDtoResponse);
-                response.setMessage("TripCategory updated successfully");
-                response.setStatusCode(ResponseCodes.OK.code());
-                response.setTimestamp(LocalDateTime.now().toString());
-                return ResponseEntity.ok(response);
-            } else {
+            long startTime = System.currentTimeMillis();
+            LOGGER.info("START [REST-LAYER] [RequestId={}] updateTripCategory: request={}",requestId,
+                    CommonUtils.convertToString(updatedTripCategoryDto));
+            
+            
+            Optional<TripCategory> existingTripCategoryOptional = service.getCategoryById(id);
+            if (existingTripCategoryOptional.isEmpty()) {
                 response.setMessage("TripCategory not found");
-                response.setStatusCode(ResponseCodes.NOT_FOUND.code());
+                response.setStatus(TSMSError.NOT_FOUND.getStatus());
+                LOGGER.error("TripCategory not found for id: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
+
+            TripCategory existingTripCategory = existingTripCategoryOptional.get();
+            
+            if (!CommonUtils.checkMandtoryFieldsNullOrEmptyTripCategory(updatedTripCategoryDto)) {
+                throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
+            }
+
+            existingTripCategory.setCategoryName(updatedTripCategoryDto.getCategoryName());
+            TripCategory updatedTripCategory = service.updateCategory(id, updatedTripCategoryDto, requestId);
+            TripCategoryDto updatedTripCategoryDtoResponse = convertEntityToDto(updatedTripCategory);
+
+            response.setData(updatedTripCategoryDtoResponse);
+            response.setMessage("TripCategory updated successfully");
+            response.setStatus(TSMSError.OK.getStatus());
+            response.setTimestamp(LocalDateTime.now().toString());
+            LOGGER.info("END [REST-LAYER] [RequestId={}] updateTripCategory: timeTaken={}|response={}", requestId,
+                    CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+            return ResponseEntity.ok(response);
+
+        } catch (TSMSException e) {
+            response.setMessage(e.getMessage());
+            response.setStatus(TSMSError.INVALID_REQUEST.getStatus());
+            LOGGER.error("Error occurred while updating trip category", e);
+            return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } finally {
-            response.setRequestId("requestId");
         }
     }
 
 
-    @GetMapping
-    public ResponseEntity<ResponseDto<List<TripCategoryDto>>> getAllTripCategories(){
+    @GetMapping("/get-all")
+    public ResponseEntity<TSMSResponse> getAllTripCategories(String requestId){
 
-        ResponseDto<List<TripCategoryDto>> response = new ResponseDto<>();
+        TSMSResponse response = new TSMSResponse();
+        
+        long startTime = System.currentTimeMillis();
+		LOGGER.info("START [REST-LAYER] [RequestId={}] getAllTripCategories: request={}", requestId,
+				CommonUtils.convertToString(requestId));
         try {
             List<TripCategory>tripCategories = service.getAllCategories();
             List<TripCategoryDto> tripCategorydtos = tripCategories.stream().map(this::convertEntityToDto).collect(Collectors.toList());
             response.setData(tripCategorydtos);
             response.setMessage("TripCategory List");
-            response.setStatusCode(ResponseCodes.OK.code());
+            response.setSuccess(true);
+            response.setStatus(TSMSError.OK.getStatus());
             response.setTimestamp(LocalDateTime.now().toString());
+            LOGGER.info("END [REST-LAYER] [RequestId={}] getAllTripCategories: timeTaken={}|response={}", requestId,
+            	CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+            response.setMessage("Trip Category Can't Retrieved"+ e.getMessage());
+            response.setSuccess(false);
+            response.setStatus(TSMSError.NOT_FOUND.getStatus());
+            LOGGER.error("Error occurred while getting trip categories", e);
+            return ResponseEntity.badRequest().body(response);
 
-        } finally {
-            response.setRequestId("requestId");
         }
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto<String>> deleteTripCategory(@PathVariable UUID id) {
-        ResponseDto<String> response = new ResponseDto<>();
-
+    public ResponseEntity<TSMSResponse> deleteTripCategory(@PathVariable Long id, String requestId) {
+    	
+        TSMSResponse response = new TSMSResponse();
+        
+        long startTime = System.currentTimeMillis();
+		LOGGER.info("START [REST-LAYER] [RequestId={}] deleteTripCategory: request={}", requestId,
+				CommonUtils.convertToString(id));
         try {
+        	
             Optional<TripCategory> existingTripCategory = service.getCategoryById(id);
 
-            if (existingTripCategory.isPresent()) {
+            if (existingTripCategory != null) {
                 service.deleteCategory(id);
                 response.setMessage("Trip Category Deleted Successfully");
-                response.setStatusCode(ResponseCodes.OK.code());
+                response.setSuccess(true);
+                response.setStatus(TSMSError.OK.getStatus());
                 response.setTimestamp(LocalDateTime.now().toString());
+				LOGGER.info("END [REST-LAYER] [RequestId={}] deleteTripCategory: timeTaken={}|response={}", requestId,
+						CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
                 return ResponseEntity.ok(response);
             } else {
                 response.setMessage("Trip Category Not Found");
-                response.setStatusCode(ResponseCodes.NOT_FOUND.code());
+                response.setStatus(TSMSError.NOT_FOUND.getStatus());
+                LOGGER.error("Error occurred while deleting trip category");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-        } catch (Exception e) {
+		} catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
-        } finally {
-            response.setRequestId("requestId");
         }
     }
     private TripCategoryDto convertEntityToDto(TripCategory tripcategory) {
@@ -127,12 +193,12 @@ public class TripCategoryController {
         TripCategoryDto tripCategoryDto = new TripCategoryDto();
 
         tripCategoryDto.setId(tripcategory.getId());
-        tripCategoryDto.setCategory_name(tripcategory.getCategory_name());
+        tripCategoryDto.setCategoryName(tripcategory.getCategoryName());
         tripCategoryDto.setDescription(tripcategory.getDescription());
         tripCategoryDto.setCode(tripcategory.getCode());
         tripCategoryDto.setStatus(tripcategory.isStatus());
-        tripCategoryDto.setAdded_at(tripcategory.getAdded_at());
-        tripCategoryDto.setRemoved_at(tripcategory.getRemoved_at());
+        tripCategoryDto.setAddedAt(tripcategory.getAddedAt());
+        tripCategoryDto.setRemovedAt(tripcategory.getRemovedAt());
 
         return tripCategoryDto;
     }
@@ -140,12 +206,12 @@ public class TripCategoryController {
     private TripCategory convertDtoToEntity(TripCategoryDto tripCategoryDto) {
         TripCategory tripcategory = new TripCategory();
         tripcategory.setId(tripCategoryDto.getId());
-        tripcategory.setCategory_name(tripCategoryDto.getCategory_name());
+        tripcategory.setCategoryName(tripCategoryDto.getCategoryName());
         tripcategory.setDescription(tripCategoryDto.getDescription());
         tripcategory.setCode(tripCategoryDto.getCode());
         tripcategory.setStatus(tripCategoryDto.isStatus());
-        tripcategory.setAdded_at(tripCategoryDto.getAdded_at());
-        tripcategory.setRemoved_at(tripCategoryDto.getRemoved_at());
+        tripcategory.setAddedAt(tripCategoryDto.getAddedAt());
+        tripcategory.setRemovedAt(tripCategoryDto.getRemovedAt());
 
         return tripcategory;
     }

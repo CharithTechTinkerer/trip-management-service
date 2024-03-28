@@ -1,6 +1,7 @@
 package com.sep.tripmanagementservice.configuration.service;
 
-import com.sep.tripmanagementservice.configuration.controller.entity.Test;
+
+import com.sep.tripmanagementservice.configuration.controller.entity.systemadmin.Test;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 
 public interface TestService {

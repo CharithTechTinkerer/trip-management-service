@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sep.tripmanagementservice.configuration.controller.entity.Test;
+import com.sep.tripmanagementservice.configuration.controller.entity.systemadmin.Test;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.repository.TestRepository;

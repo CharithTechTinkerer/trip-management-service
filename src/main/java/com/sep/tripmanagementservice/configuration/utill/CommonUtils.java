@@ -5,7 +5,10 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sep.tripmanagementservice.configuration.dto.user.testDto;
+import com.sep.tripmanagementservice.configuration.dto.ApprovalDto;
+import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.dto.testDto;
+import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
 
@@ -113,5 +116,34 @@ public class CommonUtils {
 				|| testDto.getName().equals(""))
 				|| (testDto.getAddress() == null || testDto.getAddress().isEmpty() || testDto.getAddress().isBlank()
 						|| testDto.getAddress().equals("")));
+	}
+
+	public static boolean checkMandtoryFieldsNullOrEmptyTripCategory(TripCategoryDto tripcategorydto) {
+		return !((tripcategorydto.getCategoryName() == null || tripcategorydto.getCategoryName().isEmpty()
+				|| tripcategorydto.getCategoryName().isBlank() || tripcategorydto.getCategoryName().equals(""))
+				|| (tripcategorydto.getDescription() == null || tripcategorydto.getDescription().isEmpty()
+						|| tripcategorydto.getDescription().isBlank() || tripcategorydto.getDescription().equals(""))
+				|| (tripcategorydto.getCode() == null || tripcategorydto.getCode().isEmpty()
+						|| tripcategorydto.getCode().isBlank() || tripcategorydto.getCode().equals(""))
+				|| (tripcategorydto.getAddedAt() == null || tripcategorydto.getCode().isEmpty()
+						|| tripcategorydto.getCode().isBlank() || tripcategorydto.getCode().equals("")));
+	}
+
+	public static boolean checkApprovalMandtoryFieldsNullOrEmpty(ApprovalDto approvalDto) {
+		return !((approvalDto.getId() == null)
+				|| (approvalDto.getContent() == null || approvalDto.getContent().isEmpty()
+						|| approvalDto.getContent().isBlank() || approvalDto.getContent().equals(""))
+				|| (approvalDto.getCreatedBy() == null || approvalDto.getCreatedBy().isEmpty()
+						|| approvalDto.getCreatedBy().isBlank() || approvalDto.getCreatedBy().equals(""))
+				|| (approvalDto.getEmail() == null || approvalDto.getEmail().isEmpty()
+						|| approvalDto.getEmail().isBlank() || approvalDto.getEmail().equals(""))
+				|| (approvalDto.getReason() == null || approvalDto.getReason().isEmpty()
+						|| approvalDto.getReason().isBlank() || approvalDto.getReason().equals("")));
+	}
+
+	public static boolean isValidateApprovalStatus(String approvalStatus) {
+		return (approvalStatus.equals(ApprovalStatus.PENDING.name())
+				|| approvalStatus.equals(ApprovalStatus.APPROVED.name())
+				|| approvalStatus.equals(ApprovalStatus.REJECTED.name()));
 	}
 }
