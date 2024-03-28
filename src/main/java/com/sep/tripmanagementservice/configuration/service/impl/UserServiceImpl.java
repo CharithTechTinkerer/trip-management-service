@@ -93,11 +93,11 @@ public class UserServiceImpl implements UserService {
 
 				if (user.getRole().equals(Roles.TO)) {
 					Approval approval = new Approval();
-					approval.setId(response.getId());
-					approval.setContent(response.getFirstName().concat(" ").concat(response.getLastName())
+					approval.setId(existingUser.getId());
+					approval.setContent(existingUser.getFirstName().concat(" ").concat(existingUser.getLastName())
 							.concat(" wants to upgrate his/her account to Trip Organizer account"));
-					approval.setCreatedBy(response.getFirstName().concat(" ").concat(response.getLastName()));
-					approval.setEmail(response.getEmail());
+					approval.setCreatedBy(existingUser.getFirstName().concat(" ").concat(existingUser.getLastName()));
+					approval.setEmail(existingUser.getEmail());
 					approval.setReason("Trip Organizer Account Updation Request");
 
 					// Call Save Method in Approval Service.
