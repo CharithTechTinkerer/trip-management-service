@@ -121,7 +121,6 @@ public class ApprovalController {
 		TSMSResponse response = new TSMSResponse();
 
 		// Service Call.
-
 		List<Approval> approvals = service.getAll(requestId);
 
 		List<ApprovalDto> approvalDto = new ArrayList<>();
