@@ -24,7 +24,15 @@ public enum TSMSError {
 	INVALID_EMAIL("020", 400, "Invalid Email Address"),
 	INVALID_USERNAME("022", 400, "Invalid UserName"),
 	EMAIL_EXIST("023", 409, "An account associated with this email already exists"),
-	USERNAME_EXIST("024", 409, "An account associated with this username already exists");
+	USERNAME_EXIST("024", 409, "An account associated with this username already exists"),
+	UNAUTHORIZED("025", 401, "Unauthorized"),
+	APPROVAL_FAILED("026", 404, "Approval Failed"),
+	INVALID_APPROVAL_STATUS("027", 400, "Invalid Approval Status"),
+	APPROVAL_REQUEST_NOT_FOUND("028", 404, "Approval Request Not Found"),
+	ID_FIELD_EMPTY("029", 404, "Id Field is Empty"),
+	EMAIL_FIELD_EMPTY("030", 404, "Email Field is Empty"),
+	APPROVAL_STATUS_FIELD_EMPTY("031", 404, "Approval Status Field is Empty");
+	
 
 	private int status;
 	private String code;
