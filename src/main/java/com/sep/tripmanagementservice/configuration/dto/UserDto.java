@@ -58,4 +58,10 @@ public class UserDto {
 	private String masterToken;
 
 	private String authToken;
+
+	private String profilePictureName;
+
+	private String profilePictureContent;
+
+	private String profilePictureUrl;
 }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sep.tripmanagementservice.configuration.dto.ApprovalDto;
 import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.dto.testDto;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
@@ -109,13 +108,6 @@ public class CommonUtils {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
-	}
-
-	public static boolean checkMandtoryFieldsNullOrEmpty(testDto testDto) {
-		return !((testDto.getName() == null || testDto.getName().isEmpty() || testDto.getName().isBlank()
-				|| testDto.getName().equals(""))
-				|| (testDto.getAddress() == null || testDto.getAddress().isEmpty() || testDto.getAddress().isBlank()
-						|| testDto.getAddress().equals("")));
 	}
 
 	public static boolean checkMandtoryFieldsNullOrEmptyTripCategory(TripCategoryDto tripcategorydto) {

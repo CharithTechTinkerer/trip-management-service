@@ -92,6 +92,9 @@ public class User {
 	@Column(name = "updated_date")
 	private LocalDateTime updatedDate;
 
+	@Column(name = "profile_picture_url")
+	private String profilePictureUrl;
+
 	@Transient
 	private String masterToken;
 
