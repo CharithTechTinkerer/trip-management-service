@@ -1,6 +1,5 @@
 package com.sep.tripmanagementservice.configuration.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -61,7 +60,7 @@ public class User {
 	private Salutation salutation;
 
 	@Column(name = "date_of_birth")
-	private LocalDate dateOfBirth;
+	private String dateOfBirth;
 
 	@Column(name = "contact_no", nullable = false)
 	private String contactNo;

@@ -8,12 +8,12 @@ import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 
 public interface ApprovalService {
 
-	Approval save(Approval approval, String requestId) throws TSMSException;
+	public Approval save(Approval approval, String requestId) throws TSMSException;
 
-	List<Approval> getByApprovalStatus(ApprovalStatus approvalStatus, Integer pageNo, Integer pageSize,
+	public List<Approval> getByApprovalStatus(ApprovalStatus approvalStatus, Integer pageNo, Integer pageSize,
 			String requestId) throws TSMSException;
 
-	List<Approval> getAll(String requestId) throws TSMSException;
+	public List<Approval> getAll(String requestId) throws TSMSException;
 
-	Approval update(Approval approval, String requestId) throws TSMSException;
+	public Approval update(Approval approval, String requestId) throws TSMSException;
 }

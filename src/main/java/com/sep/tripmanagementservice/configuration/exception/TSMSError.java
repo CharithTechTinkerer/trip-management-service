@@ -7,7 +7,7 @@ public enum TSMSError {
 	INVALID_REQUEST("003", 400, "Invalid Request"),
 	INVALID_ROLE("004", 400, "Invalid Role"), 
 	INVALID_CONTACT_NO("005", 400, "Invalid Contact Number"),
-	NOT_FOUND("006", 404, "Not Found"), 
+	NOT_FOUND("006", 404, "Data Not Found"), 
 	CREATED("007", 201, "Created"),
 	MANDOTORY_FIELDS_EMPTY("008", 400, "Mandatory fields are null. Please ensure all required fields are provided"),
 	INVALID_SALUTATION("009", 400, "Invalid Salutation"), 
@@ -36,7 +36,10 @@ public enum TSMSError {
 	USERNAME_UPDATE_NOT_ALLOWED("033", 404, "You are not allowed to update the username"),
 	PROFILE_PICTURE_UPLOAD_FAILED("034", 404, "Profile Picture Upload Failed"),
 	APPROVAL_REQUEST_CREATION_FAILED("035", 404, "Approval Request Creation Failed"),
-	PROFILE_PICTURE_DELETE_FAILED("035", 404, "Profile Picture Deletion Failed");
+	PROFILE_PICTURE_DELETE_FAILED("035", 404, "Profile Picture Deletion Failed"),
+	INVALID_NIC("036", 400, "Invalid NIC Number"),
+	INVALID_GENDER("037", 400, "Invalid Gender"),
+	INVALID_DOB("038", 400, "Invalid Date of Birth");
 	
 
 	private int status;

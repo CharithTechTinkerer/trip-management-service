@@ -1,5 +1,8 @@
 package com.sep.tripmanagementservice.configuration.utill;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sep.tripmanagementservice.configuration.dto.ApprovalDto;
 import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
+import com.sep.tripmanagementservice.configuration.enums.Gender;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
 
@@ -79,7 +83,7 @@ public class CommonUtils {
 		return !((masterToken == null || masterToken.isEmpty() || masterToken.isBlank() || masterToken.equals("")));
 	}
 
-	public static boolean isValidateRole(String role) {
+	public static boolean isValidRole(String role) {
 		return (role.equals(Roles.SA.name()) || role.equals(Roles.TO.name()) || role.equals(Roles.TP.name()));
 	}
 
@@ -138,4 +142,44 @@ public class CommonUtils {
 				|| approvalStatus.equals(ApprovalStatus.APPROVED.name())
 				|| approvalStatus.equals(ApprovalStatus.REJECTED.name()));
 	}
+
+	public static boolean NICValidation(String nic) {
+
+		String Format1Regex = "\\d{9}V";
+		String Format2Regex = "\\d{12}";
+
+		Pattern pattern1 = Pattern.compile(Format1Regex);
+		Pattern pattern2 = Pattern.compile(Format2Regex);
+
+		Matcher matcher1 = pattern1.matcher(nic);
+		Matcher matcher2 = pattern2.matcher(nic);
+
+		return ((matcher1.matches() && !haveEmptySpace(nic)) || (matcher2.matches() && !haveEmptySpace(nic)));
+	}
+
+	public static boolean isValidGender(String gender) {
+		return (gender.equals(Gender.M.name()) || gender.equals(Gender.F.name()) || gender.equals(Gender.O.name()));
+	}
+
+	public static boolean isValidDOB(String dob) {
+
+		String regex = "\\d{4}-\\d{2}-\\d{2}";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(dob);
+
+		if (!matcher.matches()) {
+			return false;
+		} else {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			sdf.setLenient(false);
+
+			try {
+				Date date = sdf.parse(dob);
+				return !date.after(new Date());
+			} catch (ParseException e) {
+				return false;
+			}
+		}
+	}
+
 }
