@@ -7,7 +7,7 @@ public enum TSMSError {
 	INVALID_REQUEST("003", 400, "Invalid Request"),
 	INVALID_ROLE("004", 400, "Invalid Role"), 
 	INVALID_CONTACT_NO("005", 400, "Invalid Contact Number"),
-	NOT_FOUND("006", 404, "Not Found"), 
+	NOT_FOUND("006", 404, "Data Not Found"), 
 	CREATED("007", 201, "Created"),
 	MANDOTORY_FIELDS_EMPTY("008", 400, "Mandatory fields are null. Please ensure all required fields are provided"),
 	INVALID_SALUTATION("009", 400, "Invalid Salutation"), 

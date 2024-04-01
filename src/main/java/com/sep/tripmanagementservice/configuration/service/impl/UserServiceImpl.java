@@ -2,10 +2,15 @@ package com.sep.tripmanagementservice.configuration.service.impl;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ApprovalService approvalService;
+
+	@Value("${defaultPageSize}")
+	private Integer defaultPageSize;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -133,6 +141,90 @@ public class UserServiceImpl implements UserService {
 				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
 		return response;
 
+	}
+
+	@Override
+	public User getByEmail(String email, String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getByEmail: request={}", requestId,
+				CommonUtils.convertToString(email));
+
+		User response = new User();
+		try {
+			response = repository.findByEmail(email);
+		} catch (Exception e) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getByEmail : exception={}", requestId, e.getMessage());
+			e.printStackTrace();
+			throw new TSMSException(TSMSError.USER_NOT_FOUND);
+		}
+
+		if (response == null) {
+			throw new TSMSException(TSMSError.USER_NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getByEmail: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+		return response;
+	}
+
+	@Override
+	public Page<User> getAllWithPagination(Integer pageNo, Integer pageSize, String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getAllWithPagination: request={}|pageNo={}|pageSize={}",
+				requestId, pageNo, pageSize);
+
+		Page<User> response;
+		Pageable pageable = null;
+
+		if (pageNo != null && pageSize != null) {
+			pageable = PageRequest.of(pageNo - 1, pageSize);
+		} else if (pageNo != null && pageSize == null) {
+			pageable = PageRequest.of(pageNo - 1, defaultPageSize);
+		}
+
+		try {
+			response = repository.findAll(pageable);
+		} catch (Exception e) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getAllWithPagination : exception={}", requestId,
+					e.getMessage());
+			e.printStackTrace();
+			throw new TSMSException(TSMSError.NOT_FOUND);
+		}
+
+		if (response.isEmpty()) {
+			throw new TSMSException(TSMSError.NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getAll: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+		return response;
+	}
+
+	@Override
+	public List<User> getAll(String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getAll: request={}", requestId);
+
+		List<User> response;
+
+		try {
+			response = repository.findAll();
+		} catch (Exception e) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getAll : exception={}", requestId, e.getMessage());
+			e.printStackTrace();
+			throw new TSMSException(TSMSError.NOT_FOUND);
+		}
+
+		if (response.isEmpty()) {
+			throw new TSMSException(TSMSError.NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getAll: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+		return response;
 	}
 
 }
