@@ -1,10 +1,8 @@
 package com.sep.tripmanagementservice.configuration.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sep.tripmanagementservice.configuration.enums.Gender;
 import com.sep.tripmanagementservice.configuration.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -31,11 +29,11 @@ public class UserDto {
 
 	private String nic;
 
-	private Gender gender;
+	private String gender;
 
 	private String salutation;
 
-	private LocalDate dateOfBirth;
+	private String dateOfBirth;
 
 	private String contactNo;
 

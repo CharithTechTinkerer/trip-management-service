@@ -36,7 +36,10 @@ public enum TSMSError {
 	USERNAME_UPDATE_NOT_ALLOWED("033", 404, "You are not allowed to update the username"),
 	PROFILE_PICTURE_UPLOAD_FAILED("034", 404, "Profile Picture Upload Failed"),
 	APPROVAL_REQUEST_CREATION_FAILED("035", 404, "Approval Request Creation Failed"),
-	PROFILE_PICTURE_DELETE_FAILED("035", 404, "Profile Picture Deletion Failed");
+	PROFILE_PICTURE_DELETE_FAILED("035", 404, "Profile Picture Deletion Failed"),
+	INVALID_NIC("036", 400, "Invalid NIC Number"),
+	INVALID_GENDER("037", 400, "Invalid Gender"),
+	INVALID_DOB("038", 400, "Invalid Date of Birth");
 	
 
 	private int status;

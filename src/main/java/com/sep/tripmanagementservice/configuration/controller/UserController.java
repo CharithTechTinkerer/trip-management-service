@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sep.tripmanagementservice.configuration.dto.UserDto;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
 import com.sep.tripmanagementservice.configuration.entity.User;
+import com.sep.tripmanagementservice.configuration.enums.Gender;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
@@ -65,12 +65,22 @@ public class UserController {
 			throw new TSMSException(TSMSError.INVALID_LAST_NAME);
 		}
 
+		if (!CommonUtils.NICValidation(userDto.getNic())) {
+			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] update : Invalid NIC Number", requestId);
+			throw new TSMSException(TSMSError.INVALID_NIC);
+		}
+
+		if (!CommonUtils.isValidGender(userDto.getGender())) {
+			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] update : Invalid Gender", requestId);
+			throw new TSMSException(TSMSError.INVALID_GENDER);
+		}
+
 		if (!CommonUtils.validatePhoneNumber(userDto.getContactNo())) {
 			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] update : Invalid Contact Number", requestId);
 			throw new TSMSException(TSMSError.INVALID_CONTACT_NO);
 		}
 
-		if (!CommonUtils.isValidateRole(userDto.getRole())) {
+		if (!CommonUtils.isValidRole(userDto.getRole())) {
 			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] update : Invalid Role", requestId);
 			throw new TSMSException(TSMSError.INVALID_ROLE);
 		}
@@ -78,6 +88,11 @@ public class UserController {
 		if (!CommonUtils.isValidateSalutation(userDto.getSalutation())) {
 			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] update : Invalid Salutation", requestId);
 			throw new TSMSException(TSMSError.INVALID_SALUTATION);
+		}
+
+		if (!CommonUtils.isValidDOB(userDto.getDateOfBirth())) {
+			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] update : Invalid Date of Birth", requestId);
+			throw new TSMSException(TSMSError.INVALID_DOB);
 		}
 
 		if (!CommonUtils.isValidPassword(userDto.getPassword())) {
@@ -144,13 +159,26 @@ public class UserController {
 			} else if (salutation.equals(Salutation.REV.name())) {
 				user.setSalutation(Salutation.REV);
 			}
+
+		}
+
+		if (userDto.getGender() != null) {
+
+			String gender = userDto.getGender();
+
+			if (gender.equals(Gender.M.name())) {
+				user.setGender(Gender.M);
+			} else if (gender.equals(Gender.F.name())) {
+				user.setGender(Gender.F);
+			} else if (gender.equals(Gender.O.name())) {
+				user.setGender(Gender.O);
+			}
 		}
 
 		user.setFirstName(userDto.getFirstName());
 		user.setLastName(userDto.getLastName());
 		user.setEmail(userDto.getEmail());
 		user.setNic(userDto.getNic());
-		user.setGender(userDto.getGender());
 
 		user.setDateOfBirth(userDto.getDateOfBirth());
 		user.setContactNo(userDto.getContactNo());
@@ -172,7 +200,7 @@ public class UserController {
 		userDto.setLastName(user.getLastName());
 		userDto.setEmail(user.getEmail());
 		userDto.setNic(user.getNic());
-		userDto.setGender(user.getGender());
+		userDto.setGender(user.getGender().name());
 		userDto.setSalutation(user.getSalutation().name());
 		userDto.setDateOfBirth(user.getDateOfBirth());
 		userDto.setContactNo(user.getContactNo());
