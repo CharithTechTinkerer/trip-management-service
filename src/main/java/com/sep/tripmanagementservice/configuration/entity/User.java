@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sep.tripmanagementservice.configuration.enums.AccountStatus;
 import com.sep.tripmanagementservice.configuration.enums.Gender;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
@@ -85,6 +86,10 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
+	@Column(name = "account_status")
+	@Enumerated(EnumType.STRING)
+	private AccountStatus accountStatus;
+
 	@Column(name = "created_date", nullable = false)
 	private LocalDateTime createdDate;
 
@@ -93,6 +98,9 @@ public class User {
 
 	@Column(name = "profile_picture_url")
 	private String profilePictureUrl;
+
+	@Column(name = "activation_code")
+	private String activationCode;
 
 	@Transient
 	private String masterToken;
