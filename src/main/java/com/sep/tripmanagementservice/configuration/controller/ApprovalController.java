@@ -124,8 +124,6 @@ public class ApprovalController {
 		TSMSResponse response = new TSMSResponse();
 
 		// Service Call.
-		ApprovalStatus approvalStatus = null;
-
 		ApprovalDto approvalDto = convertEntityToDto(service.getByUserIdAndEmail(id, email, requestId));
 
 		response.setRequestId(requestId);
