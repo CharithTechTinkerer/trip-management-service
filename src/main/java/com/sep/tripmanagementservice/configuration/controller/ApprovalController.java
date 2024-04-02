@@ -111,6 +111,36 @@ public class ApprovalController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/get-by-id-email/{id}/{email}")
+	public ResponseEntity<TSMSResponse> getApprovalRequestByIdAndEmail(
+			@PathVariable(name = "id", required = true) Long id,
+			@PathVariable(name = "email", required = true) String email,
+			@RequestParam(name = "requestId", required = true) String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [REST-LAYER] [RequestId={}] getApprovalRequestByIdAndEmail: id={}|email={}", requestId, id,
+				email);
+
+		TSMSResponse response = new TSMSResponse();
+
+		// Service Call.
+		ApprovalStatus approvalStatus = null;
+
+		ApprovalDto approvalDto = convertEntityToDto(service.getByUserIdAndEmail(id, email, requestId));
+
+		response.setRequestId(requestId);
+		response.setSuccess(true);
+		response.setData(approvalDto);
+		response.setMessage("Approval Request Retreived Successfully");
+		response.setStatus(TSMSError.OK.getStatus());
+		response.setTimestamp(LocalDateTime.now().toString());
+
+		LOGGER.info("END [REST-LAYER] [RequestId={}] getApprovalRequestByIdAndEmail: timeTaken={}|response={}",
+				requestId, CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping("/get-all")
 	public ResponseEntity<TSMSResponse> getAllApprovalRequests(
 			@RequestParam(name = "requestId", required = true) String requestId) throws TSMSException {

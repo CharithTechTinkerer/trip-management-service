@@ -16,4 +16,6 @@ public interface ApprovalService {
 	public List<Approval> getAll(String requestId) throws TSMSException;
 
 	public Approval update(Approval approval, String requestId) throws TSMSException;
+
+	public Approval getByUserIdAndEmail(Long id, String email, String requestId) throws TSMSException;
 }
