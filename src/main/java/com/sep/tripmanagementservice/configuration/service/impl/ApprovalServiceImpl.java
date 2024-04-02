@@ -159,4 +159,31 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return response;
 	}
 
+	@Override
+	public Approval getByUserIdAndEmail(Long id, String email, String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getByIdAndEmail: request={}", requestId);
+
+		Approval response = new Approval();
+		try {
+
+			response = repository.findByIdAndEmail(id, email);
+
+		} catch (Exception e) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getByIdAndEmail : exception={}", requestId,
+					e.getMessage());
+			e.printStackTrace();
+			throw new TSMSException(TSMSError.APPROVAL_FAILED);
+		}
+
+		if (response == null) {
+			throw new TSMSException(TSMSError.APPROVAL_REQUEST_NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getByIdAndEmail: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+		return response;
+	}
+
 }
