@@ -49,7 +49,6 @@ public class TripCategoryServiceImpl implements TripCategoryService {
 		}
 
 		try {
-
 			tripcategory.setStatus(TripCategoryStatus.ACTIVE);
 			tripcategory.setCreatedDate(LocalDateTime.now());
 			response = repository.save(tripcategory);
