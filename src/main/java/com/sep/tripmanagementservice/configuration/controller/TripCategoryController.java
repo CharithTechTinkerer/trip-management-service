@@ -180,7 +180,7 @@ public class TripCategoryController {
 		return ResponseEntity.ok(response);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<TSMSResponse> deleteTripCategory(@PathVariable(name = "id", required = true) Long id,
 			@RequestParam(name = "deletedBy", required = true) String deletedBy,
 			@RequestParam(name = "requestId", required = true) String requestId) throws TSMSException {
