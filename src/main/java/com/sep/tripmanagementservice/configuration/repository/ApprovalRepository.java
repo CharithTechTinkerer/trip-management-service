@@ -11,6 +11,7 @@ import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 
 @Repository
 public interface ApprovalRepository extends JpaRepository<Approval, Long> {
+
 	List<Approval> findByApprovalStatus(ApprovalStatus approvalStatus, Pageable pageable);
 
 	Approval findByIdAndEmail(Long id, String email);

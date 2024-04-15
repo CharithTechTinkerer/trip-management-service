@@ -16,11 +16,21 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TripCategoryDto {
 
-    private Long id;
-    private String categoryName;
-    private String code;
-    private String description;
-    private boolean status;
-    private LocalDateTime addedAt;
-    private LocalDateTime removedAt;
+	private Long id;
+
+	private String name;
+
+	private String code;
+
+	private String description;
+
+	private String status;
+
+	private String createdBy;
+
+	private String updatedBy;
+
+	private LocalDateTime createdDate;
+
+	private LocalDateTime updatedDate;
 }

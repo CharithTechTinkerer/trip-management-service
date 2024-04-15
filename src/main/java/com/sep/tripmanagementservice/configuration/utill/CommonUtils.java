@@ -14,6 +14,7 @@ import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.enums.Gender;
 import com.sep.tripmanagementservice.configuration.enums.Roles;
 import com.sep.tripmanagementservice.configuration.enums.Salutation;
+import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
 
 public class CommonUtils {
 
@@ -115,14 +116,14 @@ public class CommonUtils {
 	}
 
 	public static boolean checkMandtoryFieldsNullOrEmptyTripCategory(TripCategoryDto tripcategorydto) {
-		return !((tripcategorydto.getCategoryName() == null || tripcategorydto.getCategoryName().isEmpty()
-				|| tripcategorydto.getCategoryName().isBlank() || tripcategorydto.getCategoryName().equals(""))
+		return !((tripcategorydto.getName() == null || tripcategorydto.getName().isEmpty()
+				|| tripcategorydto.getName().equals(""))
 				|| (tripcategorydto.getDescription() == null || tripcategorydto.getDescription().isEmpty()
-						|| tripcategorydto.getDescription().isBlank() || tripcategorydto.getDescription().equals(""))
+						|| tripcategorydto.getDescription().equals(""))
 				|| (tripcategorydto.getCode() == null || tripcategorydto.getCode().isEmpty()
-						|| tripcategorydto.getCode().isBlank() || tripcategorydto.getCode().equals(""))
-				|| (tripcategorydto.getAddedAt() == null || tripcategorydto.getCode().isEmpty()
-						|| tripcategorydto.getCode().isBlank() || tripcategorydto.getCode().equals("")));
+						|| tripcategorydto.getCode().equals("")
+						|| (tripcategorydto.getCreatedBy() == null || tripcategorydto.getCreatedBy().isEmpty()
+								|| tripcategorydto.getCreatedBy().equals(""))));
 	}
 
 	public static boolean checkApprovalMandtoryFieldsNullOrEmpty(ApprovalDto approvalDto) {
@@ -180,6 +181,11 @@ public class CommonUtils {
 				return false;
 			}
 		}
+	}
+
+	public static boolean isValidStatus(String status) {
+		return (status.equals(TripCategoryStatus.ACTIVE.name()) || status.equals(TripCategoryStatus.INACTIVE.name())
+				|| status.equals(TripCategoryStatus.DELETED.name()));
 	}
 
 }

@@ -47,7 +47,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 			// Repository Call
 			response = repository.save(approval);
 
-			// TODO update user account active status as Pending
 		} catch (Exception e) {
 
 			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  save : exception={}", requestId, e.getMessage());
