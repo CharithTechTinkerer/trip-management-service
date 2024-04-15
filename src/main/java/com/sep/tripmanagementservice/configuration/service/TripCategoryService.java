@@ -1,20 +1,22 @@
 package com.sep.tripmanagementservice.configuration.service;
 
-import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.TripCategory;
-
 import java.util.List;
-import java.util.Optional;
+
+import com.sep.tripmanagementservice.configuration.entity.TripCategory;
+import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
+import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 
 public interface TripCategoryService {
-    TripCategory save(TripCategory tripcategory, String requestId);
 
-    List<TripCategory> getAllCategories();
+	TripCategory save(TripCategory tripCategory, String requestId) throws TSMSException;
 
-    Optional<TripCategory> getCategoryById(Long categoryId);
+	TripCategory update(Long id, TripCategory updatedTripCategory, String requestId) throws TSMSException;
 
-    TripCategory deleteCategory(Long categoryId);
-    
-    TripCategory updateCategory(Long existingTripCategory, TripCategoryDto updatedTripCategoryDto, 
-			String requestId);
+	List<TripCategory> getAllTripCategories(TripCategoryStatus status, Integer pageNo, Integer pageSize,
+			String requestId) throws TSMSException;
+
+	TripCategory getTripCategoryById(Long id, String requestId) throws TSMSException;
+
+	Boolean deleteTripCategory(Long id, String deletedBy, String requestId) throws TSMSException;
+
 }

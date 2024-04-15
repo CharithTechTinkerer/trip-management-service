@@ -1,85 +1,202 @@
 package com.sep.tripmanagementservice.configuration.service.impl;
 
-
-import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.entity.TripCategory;
-import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepository;
-import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.sep.tripmanagementservice.configuration.entity.TripCategory;
+import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
+import com.sep.tripmanagementservice.configuration.exception.TSMSError;
+import com.sep.tripmanagementservice.configuration.exception.TSMSException;
+import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepository;
+import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
+import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
+
 @Service
-public class TripCategoryServiceImpl implements TripCategoryService{
+public class TripCategoryServiceImpl implements TripCategoryService {
 
-    @Autowired
-    private TripCategoryRepository repository;
+	@Autowired
+	private TripCategoryRepository repository;
 
-    @Override
-    public TripCategory save(TripCategory tripcategory, String requestId) {
-        TripCategory tripCategoryResponse = new TripCategory();
-        try {
-            tripCategoryResponse = repository.save(tripcategory);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	@Value("${defaultPageSize}")
+	private Integer defaultPageSize;
 
-        return tripCategoryResponse;
-    }
+	private static final Logger LOGGER = LoggerFactory.getLogger(TripCategoryServiceImpl.class);
 
-    @Override
-    public List<TripCategory> getAllCategories(){
-        List<TripCategory> categoryList = repository.findAll();
-        
-        return categoryList;
+	@Override
+	public TripCategory save(TripCategory tripcategory, String requestId) throws TSMSException {
 
-    }
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] save: request={}", requestId,
+				CommonUtils.convertToString(tripcategory));
 
+		TripCategory response = new TripCategory();
+		TripCategory exists = repository.findByCode(tripcategory.getCode());
 
-    @Override
-	public Optional<TripCategory> getCategoryById(Long categoryId) {
-    	Optional<TripCategory> category = repository.findById(categoryId);
-    	
-		return category;
+		if (exists != null) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  save : error={}", requestId,
+					TSMSError.TRIP_CATEGORY_CODE_ALREADY_EXIST.getMessage());
+			throw new TSMSException(TSMSError.TRIP_CATEGORY_CODE_ALREADY_EXIST);
+		}
+
+		try {
+			tripcategory.setStatus(TripCategoryStatus.ACTIVE);
+			tripcategory.setCreatedDate(LocalDateTime.now());
+			response = repository.save(tripcategory);
+		} catch (Exception e) {
+
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  save : exception={}", requestId, e.getMessage());
+			e.printStackTrace();
+			throw new TSMSException(TSMSError.TRIP_CATEGORY_CREATION_FAILED);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] save: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+		return response;
 	}
-    
-    @Override
-    public TripCategory updateCategory(Long categoryId, TripCategoryDto updatedTripCategoryDto, String requestId) {
-        // Get the existing category by ID
-		TripCategory existingCategory = repository.findById(categoryId).orElse(null);
 
-        // Check if the category exists
-        if (existingCategory != null) {
-            // Update the existing category with new values
-            existingCategory.setCategoryName(updatedTripCategoryDto.getCategoryName());
-            // You can update other fields similarly
+	@Override
+	public TripCategory update(Long id, TripCategory updatedTripCategory, String requestId) throws TSMSException {
 
-            // Save the updated category
-            return repository.save(existingCategory);
-        } else {
-            // If the category with the given ID doesn't exist, throw an exception
-            throw new RuntimeException("TripCategory not found with ID: " + categoryId);
-        }
-    }
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] update: request={}", requestId,
+				CommonUtils.convertToString(updatedTripCategory));
 
+		TripCategory existingCategory = repository.findById(id).orElse(null);
+		TripCategory response = new TripCategory();
 
+		if (existingCategory != null) {
 
-    @Override
-    public TripCategory deleteCategory(Long categoryId) {
-        // Get the existing category by ID
-        TripCategory tripCategoryToDelete = repository.findById(categoryId)
-                .orElse(null);
+			if (updatedTripCategory.getName() != null) {
+				existingCategory.setName(updatedTripCategory.getName());
+			}
 
-        // Check if the category exists
-        if (tripCategoryToDelete != null) {
-            repository.delete(tripCategoryToDelete);
-            return tripCategoryToDelete;
-        } else {
-            // If the category with the given ID doesn't exist, throw an exception
-            throw new RuntimeException("TripCategory Not Found");
-        }
-    }
+			if (updatedTripCategory.getDescription() != null) {
+				existingCategory.setDescription(updatedTripCategory.getDescription());
+			}
+
+			if (updatedTripCategory.getStatus() != null) {
+				existingCategory.setStatus(updatedTripCategory.getStatus());
+			}
+
+			existingCategory.setUpdatedBy(updatedTripCategory.getUpdatedBy());
+			existingCategory.setUpdatedDate(LocalDateTime.now());
+
+			response = repository.save(existingCategory);
+
+		} else {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  update : error={}", requestId,
+					TSMSError.TRIP_CATEGORY_NOT_FOUND.getMessage());
+			throw new TSMSException(TSMSError.TRIP_CATEGORY_NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] update: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
+
+		return response;
+	}
+
+	@Override
+	public List<TripCategory> getAllTripCategories(TripCategoryStatus status, Integer pageNo, Integer pageSize,
+			String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getAllTripCategories: status={}|pageNo={}|pageSize={}",
+				requestId, status, pageNo, pageSize);
+
+		Pageable pageable = null;
+
+		if (pageNo != null && pageSize != null) {
+			pageable = PageRequest.of(pageNo - 1, pageSize);
+		} else if (pageNo != null && pageSize == null) {
+			pageable = PageRequest.of(pageNo - 1, defaultPageSize);
+		}
+
+		List<TripCategory> tripCategories = new ArrayList<>();
+		try {
+			tripCategories = repository.findByStatus(status, pageable);
+		} catch (Exception e) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getAllTripCategories : exception={}", requestId,
+					e.getMessage());
+			e.printStackTrace();
+			throw new TSMSException(TSMSError.NOT_FOUND);
+		}
+
+		if (tripCategories.isEmpty()) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getAllTripCategories : error={}", requestId,
+					TSMSError.NOT_FOUND.getMessage());
+			throw new TSMSException(TSMSError.NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getAllTripCategories: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(tripCategories));
+
+		return tripCategories;
+
+	}
+
+	@Override
+	public TripCategory getTripCategoryById(Long id, String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getTripCategoryById: id={}", requestId, id);
+
+		Optional<TripCategory> tripCategory = repository.findById(id);
+
+		if (!tripCategory.isPresent()) {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getTripCategoryById : error={}", requestId,
+					TSMSError.TRIP_CATEGORY_NOT_FOUND.getMessage());
+			throw new TSMSException(TSMSError.TRIP_CATEGORY_NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getTripCategoryById: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(tripCategory.get()));
+
+		return tripCategory.get();
+	}
+
+	@Override
+	public Boolean deleteTripCategory(Long id, String deletedBy, String requestId) throws TSMSException {
+
+		long startTime = System.currentTimeMillis();
+		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] deleteTripCategory: id={}|deletedBy={}", requestId, id,
+				deletedBy);
+
+		TripCategory exists = repository.findById(id).orElse(null);
+		Boolean result = Boolean.FALSE;
+
+		if (exists != null) {
+			try {
+				exists.setStatus(TripCategoryStatus.DELETED);
+				exists.setUpdatedBy(deletedBy);
+				exists.setUpdatedDate(LocalDateTime.now());
+				repository.save(exists);
+				result = Boolean.TRUE;
+			} catch (Exception e) {
+				LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  deleteTripCategory : exception={}", requestId,
+						e.getMessage());
+				e.printStackTrace();
+				throw new TSMSException(TSMSError.TRIP_CATEGORY_DELETE_FAILED);
+			}
+		} else {
+			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  deleteTripCategory : error={}", requestId,
+					TSMSError.TRIP_CATEGORY_NOT_FOUND.getMessage());
+			throw new TSMSException(TSMSError.TRIP_CATEGORY_NOT_FOUND);
+		}
+
+		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] deleteTripCategory: timeTaken={}|response={}", requestId,
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(result));
+
+		return result;
+
+	}
 }

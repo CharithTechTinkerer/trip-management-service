@@ -4,10 +4,14 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,22 +23,36 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="Trip_Category")
+@Table(name = "Trip_Categories")
 public class TripCategory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(name="category_name", nullable=false)
-    private String categoryName;
-    @Column(name="description", nullable=false)
-    private String description;
-    @Column(name="code", nullable=false)
-    private String code;
-    @Column(name="status")
-    private boolean status;
-    @Column(name="added_at", nullable=false)
-    private LocalDateTime addedAt;
-    @Column(name="removed_at", nullable=true)
-    private LocalDateTime removedAt;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
+	@Column(name = "name", nullable = false)
+	private String name;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "code", nullable = false, unique = true)
+	private String code;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false)
+	private TripCategoryStatus status;
+
+	@Column(name = "created_by", nullable = false)
+	private String createdBy;
+
+	@Column(name = "updated_by")
+	private String updatedBy;
+
+	@Column(name = "created_date", nullable = false)
+	private LocalDateTime createdDate;
+
+	@Column(name = "updated_date")
+	private LocalDateTime updatedDate;
 
 }

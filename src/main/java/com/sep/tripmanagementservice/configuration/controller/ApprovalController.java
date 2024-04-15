@@ -45,6 +45,9 @@ public class ApprovalController {
 				CommonUtils.convertToString(approvalDto));
 
 		if (!CommonUtils.checkApprovalMandtoryFieldsNullOrEmpty(approvalDto)) {
+			LOGGER.error(
+					"ERROR [REST-LAYER] [RequestId={}] save : Mandatory fields are null. Please ensure all required fields are provided",
+					requestId);
 			throw new TSMSException(TSMSError.MANDOTORY_FIELDS_EMPTY);
 		}
 
@@ -174,8 +177,8 @@ public class ApprovalController {
 	public ResponseEntity<TSMSResponse> updateApprovalStatus(@PathVariable(name = "id", required = true) Long id,
 			@PathVariable(name = "email", required = true) String email,
 			@PathVariable(name = "status", required = true) String status,
-			@RequestBody(required = true) ApprovalDto approvalDto,
-			@RequestParam(name = "requestId", required = true) String requestId) throws TSMSException {
+			@RequestParam(name = "requestId", required = true) String requestId,
+			@RequestBody(required = true) ApprovalDto approvalDto) throws TSMSException {
 
 		long startTime = System.currentTimeMillis();
 		LOGGER.info("START [REST-LAYER] [RequestId={}] updateApprovalStatus: request={}", requestId, status);
