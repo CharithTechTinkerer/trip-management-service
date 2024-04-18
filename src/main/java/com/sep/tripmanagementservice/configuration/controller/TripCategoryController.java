@@ -72,7 +72,7 @@ public class TripCategoryController {
 	public ResponseEntity<TSMSResponse> getAllTripCategories(
 			@RequestParam(name = "requestId", required = true) String requestId,
 			@RequestParam(name = "status", required = false) String status,
-			@RequestParam(name = "pageNo", required = true) Integer pageNo,
+			@RequestParam(name = "pageNo", required = false) Integer pageNo,
 			@RequestParam(name = "pageSize", required = false) Integer pageSize) throws TSMSException {
 
 		long startTime = System.currentTimeMillis();
