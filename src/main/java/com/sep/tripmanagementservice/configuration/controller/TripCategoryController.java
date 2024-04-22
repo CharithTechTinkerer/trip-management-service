@@ -73,7 +73,7 @@ public class TripCategoryController {
 	public ResponseEntity<TSMSResponse> getAllTripCategories(
 			@RequestParam(name = "requestId", required = true) String requestId,
 			@RequestParam(name = "status", required = true) String status,
-			@RequestParam(name = "searchBy", required = false) String searchBy,
+			@RequestParam(name = "searchWord", required = false) String searchWord,
 			@RequestParam(name = "pageNo", required = false) Integer pageNo,
 			@RequestParam(name = "pageSize", required = false) Integer pageSize) throws TSMSException {
 
@@ -100,7 +100,7 @@ public class TripCategoryController {
 			throw new TSMSException(TSMSError.TRIP_CATEGORY_STATUS_MANDATORY);
 		}
 
-		TripCategoryResponseVo tripCategoryResponseVo = service.getAllTripCategories(tripCategoryStatus, searchBy,
+		TripCategoryResponseVo tripCategoryResponseVo = service.getAllTripCategories(tripCategoryStatus, searchWord,
 				pageNo, pageSize, requestId);
 
 		TripCategoryResponse tripCategoryResponse = new TripCategoryResponse();
