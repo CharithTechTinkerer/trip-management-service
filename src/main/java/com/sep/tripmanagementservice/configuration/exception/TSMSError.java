@@ -46,7 +46,9 @@ public enum TSMSError {
 	INVALID_TRIP_CATEGORY_STATUS("042", 400, "Invalid Trip Category Status"), 
 	TRIP_CATEGORY_CODE_ALREADY_EXIST("043", 409, "Trip Category Code Already Exists"),
 	TRIP_CATEGORY_DELETE_FAILED("044", 400, "Trip Category Deletion Failed"),
-	FAILED("045", 401, "FAILED");
+	FAILED("045", 401, "FAILED"),
+	TRIP_CATEGORY_STATUS_MANDATORY("046", 400, "Trip Category Status is Mandatory");
+	
 	
 
 	private int status;

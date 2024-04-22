@@ -20,6 +20,7 @@ import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.repository.TripCategoryRepository;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
+import com.sep.tripmanagementservice.configuration.vo.TripCategoryResponseVo;
 
 @Service
 public class TripCategoryServiceImpl implements TripCategoryService {
@@ -106,12 +107,13 @@ public class TripCategoryServiceImpl implements TripCategoryService {
 	}
 
 	@Override
-	public List<TripCategory> getAllTripCategories(TripCategoryStatus status, Integer pageNo, Integer pageSize,
-			String requestId) throws TSMSException {
+	public TripCategoryResponseVo getAllTripCategories(TripCategoryStatus status, String searchBy, Integer pageNo,
+			Integer pageSize, String requestId) throws TSMSException {
 
 		long startTime = System.currentTimeMillis();
-		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] getAllTripCategories: status={}|pageNo={}|pageSize={}",
-				requestId, status, pageNo, pageSize);
+		LOGGER.info(
+				"START [SERVICE-LAYER] [RequestId={}] getAllTripCategories: status={}|searchBy={}|pageNo={}|pageSize={}",
+				requestId, status, searchBy, pageNo, pageSize);
 
 		Pageable pageable = null;
 
@@ -122,8 +124,20 @@ public class TripCategoryServiceImpl implements TripCategoryService {
 		}
 
 		List<TripCategory> tripCategories = new ArrayList<>();
+		Long count;
 		try {
-			tripCategories = repository.findByStatus(status, pageable);
+			if (searchBy != null) {
+				tripCategories = repository
+						.findByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndStatus(
+								searchBy, status, pageable);
+				count = repository
+						.countByCodeContainingIgnoreCaseOrNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndStatus(
+								searchBy, status);
+			} else {
+				tripCategories = repository.findByStatus(status, pageable);
+				count = repository.countByStatus(status);
+			}
+
 		} catch (Exception e) {
 			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getAllTripCategories : exception={}", requestId,
 					e.getMessage());
@@ -131,16 +145,23 @@ public class TripCategoryServiceImpl implements TripCategoryService {
 			throw new TSMSException(TSMSError.NOT_FOUND);
 		}
 
+		TripCategoryResponseVo tripCategoryVo = new TripCategoryResponseVo();
+
 		if (tripCategories.isEmpty()) {
 			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  getAllTripCategories : error={}", requestId,
 					TSMSError.NOT_FOUND.getMessage());
 			throw new TSMSException(TSMSError.NOT_FOUND);
+		} else {
+
+			tripCategoryVo.setTripCategories(tripCategories);
+			tripCategoryVo.setCount(count);
+
 		}
 
 		LOGGER.info("END [SERVICE-LAYER] [RequestId={}] getAllTripCategories: timeTaken={}|response={}", requestId,
-				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(tripCategories));
+				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(tripCategoryVo));
 
-		return tripCategories;
+		return tripCategoryVo;
 
 	}
 
