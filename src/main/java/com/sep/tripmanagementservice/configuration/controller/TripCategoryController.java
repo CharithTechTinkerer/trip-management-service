@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
-import com.sep.tripmanagementservice.configuration.dto.TripCategoryResponse;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
+import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryResponse;
 import com.sep.tripmanagementservice.configuration.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;

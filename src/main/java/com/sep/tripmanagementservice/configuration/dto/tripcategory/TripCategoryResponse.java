@@ -1,4 +1,4 @@
-package com.sep.tripmanagementservice.configuration.dto;
+package com.sep.tripmanagementservice.configuration.dto.tripcategory;
 
 import java.util.List;
 
