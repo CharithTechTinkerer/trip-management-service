@@ -1,7 +1,6 @@
 package com.sep.tripmanagementservice.configuration.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -18,14 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sep.tripmanagementservice.configuration.dto.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
+import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
+import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryResponse;
 import com.sep.tripmanagementservice.configuration.entity.TripCategory;
 import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.TripCategoryService;
 import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
+import com.sep.tripmanagementservice.configuration.vo.TripCategoryResponseVo;
 
 @RestController
 @RequestMapping("/api/v1/private/trip-categories")
@@ -71,7 +72,8 @@ public class TripCategoryController {
 	@GetMapping("/get-all")
 	public ResponseEntity<TSMSResponse> getAllTripCategories(
 			@RequestParam(name = "requestId", required = true) String requestId,
-			@RequestParam(name = "status", required = false) String status,
+			@RequestParam(name = "status", required = true) String status,
+			@RequestParam(name = "searchWord", required = false) String searchWord,
 			@RequestParam(name = "pageNo", required = false) Integer pageNo,
 			@RequestParam(name = "pageSize", required = false) Integer pageSize) throws TSMSException {
 
@@ -92,17 +94,23 @@ public class TripCategoryController {
 			} else {
 				tripCategoryStatus = TripCategoryStatus.valueOf(status);
 			}
+		} else {
+			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] getAllTripCategories : Trip Category Status is Mandatory",
+					requestId);
+			throw new TSMSException(TSMSError.TRIP_CATEGORY_STATUS_MANDATORY);
 		}
 
-		List<TripCategory> tripCategories = service.getAllTripCategories(tripCategoryStatus, pageNo, pageSize,
-				requestId);
+		TripCategoryResponseVo tripCategoryResponseVo = service.getAllTripCategories(tripCategoryStatus, searchWord,
+				pageNo, pageSize, requestId);
 
-		List<TripCategoryDto> tripCategoryDto = tripCategories.stream().map(this::convertEntityToDto)
-				.collect(Collectors.toList());
+		TripCategoryResponse tripCategoryResponse = new TripCategoryResponse();
+		tripCategoryResponse.setCount(tripCategoryResponseVo.getCount());
+		tripCategoryResponse.setTripCategoryDtos(tripCategoryResponseVo.getTripCategories().stream()
+				.map(this::convertEntityToDto).collect(Collectors.toList()));
 
 		response.setRequestId(requestId);
 		response.setSuccess(true);
-		response.setData(tripCategoryDto);
+		response.setData(tripCategoryResponse);
 		response.setMessage("Trip Categories Retreived Successfully");
 		response.setStatus(TSMSError.OK.getStatus());
 		response.setTimestamp(LocalDateTime.now().toString());
