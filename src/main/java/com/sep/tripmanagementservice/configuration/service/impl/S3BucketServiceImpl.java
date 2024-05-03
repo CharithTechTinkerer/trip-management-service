@@ -21,9 +21,6 @@ import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
 @Service
 public class S3BucketServiceImpl implements S3BucketService {
 
-	@Value("${aws.bucketName}")
-	private String bucketName;
-
 	@Value("${aws.region}")
 	private String region;
 
@@ -33,7 +30,7 @@ public class S3BucketServiceImpl implements S3BucketService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(S3BucketServiceImpl.class);
 
 	@Override
-	public String uploadFile(String base64Data, String imageName, String userName, String requestId)
+	public String uploadFile(String base64Data, String imageName, String userName, String bucketName, String requestId)
 			throws TSMSException {
 
 		long startTime = System.currentTimeMillis();
@@ -68,7 +65,7 @@ public class S3BucketServiceImpl implements S3BucketService {
 	}
 
 	@Override
-	public String deleteFile(String url, String requestId) throws TSMSException {
+	public String deleteFile(String url, String bucketName, String requestId) throws TSMSException {
 
 		long startTime = System.currentTimeMillis();
 		LOGGER.info("START [SERVICE-LAYER] [RequestId={}] deleteFile: url={}", requestId, url);
