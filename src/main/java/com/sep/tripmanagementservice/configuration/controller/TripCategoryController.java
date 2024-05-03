@@ -168,7 +168,7 @@ public class TripCategoryController {
 
 		}
 
-		if (tripCategoryDto.getStatus() != null && !CommonUtils.isValidStatus(tripCategoryDto.getStatus())) {
+		if (tripCategoryDto.getStatus() != null && !CommonUtils.isValidStatus(tripCategoryDto.getStatus().name())) {
 			LOGGER.error("ERROR [REST-LAYER] [RequestId={}] register : Invalid Role", requestId);
 			throw new TSMSException(TSMSError.INVALID_TRIP_CATEGORY_STATUS);
 		}
@@ -233,7 +233,7 @@ public class TripCategoryController {
 		tripCategoryDto.setUpdatedDate(tripCategory.getUpdatedDate());
 
 		if (tripCategory.getStatus() != null) {
-			tripCategoryDto.setStatus(tripCategory.getStatus().name());
+			tripCategoryDto.setStatus(tripCategory.getStatus());
 		}
 
 		return tripCategoryDto;
@@ -243,15 +243,15 @@ public class TripCategoryController {
 		TripCategory tripcategory = new TripCategory();
 
 		if (tripCategoryDto.getStatus() != null) {
-			String status = tripCategoryDto.getStatus();
-
+			tripcategory.setStatus(tripCategoryDto.getStatus());
+			/*TripCategoryStatus status = tripCategoryDto.getStatus().name();
 			if (status.equals(TripCategoryStatus.ACTIVE.name())) {
 				tripcategory.setStatus(TripCategoryStatus.ACTIVE);
 			} else if (status.equals(TripCategoryStatus.INACTIVE.name())) {
 				tripcategory.setStatus(TripCategoryStatus.INACTIVE);
 			} else if (status.equals(TripCategoryStatus.DELETED.name())) {
 				tripcategory.setStatus(TripCategoryStatus.DELETED);
-			}
+			}*/
 		}
 
 		tripcategory.setId(tripCategoryDto.getId());

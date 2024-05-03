@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.enums.TripCategoryStatus;
 
 import lombok.AllArgsConstructor;
@@ -54,5 +55,17 @@ public class TripCategory {
 
 	@Column(name = "updated_date")
 	private LocalDateTime updatedDate;
+	
+	
+	public TripCategoryDto convertTripCategoryToDto() {
+    	TripCategoryDto res = new TripCategoryDto();
+			res.setId(this.id);
+			res.setName(this.name);
+			res.setCode(this.code);
+			res.setDescription(this.description);
+			res.setStatus(this.status);
+		return res;
+	}
+
 
 }
