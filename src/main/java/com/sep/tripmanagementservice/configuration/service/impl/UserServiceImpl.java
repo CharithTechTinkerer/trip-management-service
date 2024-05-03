@@ -40,6 +40,9 @@ public class UserServiceImpl implements UserService {
 	@Value("${defaultPageSize}")
 	private Integer defaultPageSize;
 
+	@Value("${aws.profilePicture.bucketName}")
+	private String profilePictureBucketName;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Override
@@ -61,11 +64,11 @@ public class UserServiceImpl implements UserService {
 			if (profilePictureName != null && profilePictureContent != null) {
 				// Delete existing profile picture from s3 bucket.
 				if (existingUser.getProfilePictureUrl() != null) {
-					s3Service.deleteFile(existingUser.getProfilePictureUrl(), requestId);
+					s3Service.deleteFile(existingUser.getProfilePictureUrl(), profilePictureBucketName, requestId);
 				}
 
 				proPicUrl = s3Service.uploadFile(profilePictureContent, profilePictureName, existingUser.getUserName(),
-						requestId);
+						profilePictureBucketName, requestId);
 				LOGGER.info("[SERVICE-LAYER] [RequestId={}] update: profilePictureUrl={}", requestId, proPicUrl);
 			}
 
@@ -123,7 +126,7 @@ public class UserServiceImpl implements UserService {
 			} catch (Exception e) {
 
 				// Delete uploaded profile picture from S3.
-				s3Service.deleteFile(proPicUrl, requestId);
+				s3Service.deleteFile(proPicUrl, profilePictureBucketName, requestId);
 
 				LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  update : exception={}", requestId, e.getMessage());
 				e.printStackTrace();
@@ -131,7 +134,7 @@ public class UserServiceImpl implements UserService {
 			}
 		} else {
 
-			s3Service.deleteFile(proPicUrl, requestId);
+			s3Service.deleteFile(proPicUrl, profilePictureBucketName, requestId);
 			LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  update : error={}", requestId,
 					TSMSError.USER_NOT_FOUND.getMessage());
 			throw new TSMSException(TSMSError.USER_NOT_FOUND);
