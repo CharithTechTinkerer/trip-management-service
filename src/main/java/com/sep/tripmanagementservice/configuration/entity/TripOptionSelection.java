@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sep.tripmanagementservice.configuration.dto.TripOptionSelectionDto;
 import com.sep.tripmanagementservice.configuration.enums.CommonStatus;
 
@@ -27,7 +26,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "trip_option_selection")
 public class TripOptionSelection {
     @Id

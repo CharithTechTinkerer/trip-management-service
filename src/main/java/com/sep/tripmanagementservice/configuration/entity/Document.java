@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sep.tripmanagementservice.configuration.dto.DocumentDto;
 import com.sep.tripmanagementservice.configuration.enums.CommonStatus;
 
@@ -25,7 +24,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "document")
 public class Document {
     @Id

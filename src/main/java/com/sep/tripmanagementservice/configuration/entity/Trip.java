@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sep.tripmanagementservice.configuration.dto.DocumentDto;
 import com.sep.tripmanagementservice.configuration.dto.TripDto;
 import com.sep.tripmanagementservice.configuration.dto.TripOptionDto;
@@ -35,7 +34,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "trip")
 public class Trip {
     @Id

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sep.tripmanagementservice.configuration.dto.tripcategory.TripCategoryDto;
 import com.sep.tripmanagementservice.configuration.entity.Trip;
 import com.sep.tripmanagementservice.configuration.entity.TripCategory;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TripDto {
 	private Long id;
 	private List<TripCategoryDto> tripCategoryList;

@@ -2,6 +2,7 @@ package com.sep.tripmanagementservice.configuration.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sep.tripmanagementservice.configuration.entity.TripOption;
 import com.sep.tripmanagementservice.configuration.entity.TripOptionSelection;
 import com.sep.tripmanagementservice.configuration.enums.CommonStatus;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TripOptionSelectionDto {
 	private Long id;
 	private String name;

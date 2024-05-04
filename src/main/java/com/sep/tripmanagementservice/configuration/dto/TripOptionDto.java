@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sep.tripmanagementservice.configuration.entity.Trip;
 import com.sep.tripmanagementservice.configuration.entity.TripOption;
 import com.sep.tripmanagementservice.configuration.entity.TripOptionSelection;
@@ -18,6 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TripOptionDto {
 	private Long id;
 	private String name;
