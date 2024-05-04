@@ -1,10 +1,14 @@
 package com.sep.tripmanagementservice.configuration.utill;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -187,5 +191,12 @@ public class CommonUtils {
 		return (status.equals(TripCategoryStatus.ACTIVE.name()) || status.equals(TripCategoryStatus.INACTIVE.name())
 				|| status.equals(TripCategoryStatus.DELETED.name()));
 	}
+	
+	public static String convertMultipartFileToBase64(MultipartFile multipartFile) throws IOException {
+		byte[] fileContent = multipartFile.getBytes();
+		String encodedString = Base64.getEncoder().encodeToString(fileContent);
+		return encodedString;
+	}
 
+	
 }

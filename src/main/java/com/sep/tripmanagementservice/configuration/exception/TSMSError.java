@@ -47,10 +47,17 @@ public enum TSMSError {
 	TRIP_CATEGORY_CODE_ALREADY_EXIST("043", 409, "Trip Category Code Already Exists"),
 	TRIP_CATEGORY_DELETE_FAILED("044", 400, "Trip Category Deletion Failed"),
 	FAILED("045", 401, "FAILED"),
-	TRIP_CATEGORY_STATUS_MANDATORY("046", 400, "Trip Category Status is Mandatory");
+	TRIP_CATEGORY_STATUS_MANDATORY("046", 400, "Trip Category Status is Mandatory"),
+	DOCUMENT_NOT_FOUND("047", 404, "Document not found"),
+	USER_ID_NOT_FOUND("048", 404, "User id not found"),
+	NON_EXISTING_TRIP_ID_FOR_USER("049", 400, "Non existing trip id for user"),
+	DOC_ID_NOT_EXIST_FOR_TRIP_ID("050", 400, "Document Id does not existing for the trip id"),
+	DOCUMENT_CONVERSION_FAILED("051", 404, "Document conversion failed"),
+	DOCUMENT_UPLOAD_FAILD("052", 404, "Document upload failed"),
+	DOCUMENT_DELETE_FAILD("053", 404, "Document delete failed"),
+	USERNAME_NOT_FOUND("054", 404, "Username not found");
 	
 	
-
 	private int status;
 	private String code;
 	private String message;
