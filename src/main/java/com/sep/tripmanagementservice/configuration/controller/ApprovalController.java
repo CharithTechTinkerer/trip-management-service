@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sep.tripmanagementservice.configuration.dto.ApprovalDto;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
 import com.sep.tripmanagementservice.configuration.entity.Approval;
+import com.sep.tripmanagementservice.configuration.entity.User;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.service.ApprovalService;
+import com.sep.tripmanagementservice.configuration.service.UserService;
 import com.sep.tripmanagementservice.configuration.utill.CommonUtils;
 
 @RestController
@@ -32,6 +34,9 @@ public class ApprovalController {
 
 	@Autowired
 	private ApprovalService service;
+
+	@Autowired
+	private UserService userService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApprovalController.class);
 
@@ -207,13 +212,26 @@ public class ApprovalController {
 		approvalDto.setEmail(email);
 		approvalDto.setApprovalStatus(status);
 
-		ApprovalDto dto = convertEntityToDto(service.update(convertDtoToEntity(approvalDto), requestId));
-		response.setRequestId(requestId);
-		response.setSuccess(true);
-		response.setData(dto);
-		response.setMessage("Approval Request Updated Successfully");
-		response.setStatus(TSMSError.OK.getStatus());
-		response.setTimestamp(LocalDateTime.now().toString());
+		User user = userService.getByEmail(email, requestId);
+		if (user != null) {
+
+			String recipientName = user.getFirstName().concat(" ").concat(user.getLastName());
+
+			ApprovalDto dto = convertEntityToDto(
+					service.update(convertDtoToEntity(approvalDto), recipientName, requestId));
+			response.setRequestId(requestId);
+			response.setSuccess(true);
+			response.setData(dto);
+			response.setMessage("Approval Request Updated Successfully");
+			response.setStatus(TSMSError.OK.getStatus());
+			response.setTimestamp(LocalDateTime.now().toString());
+
+		} else {
+			LOGGER.error(
+					"ERROR [REST-LAYER] [RequestId={}] updateApprovalStatus : User not found for the email provided",
+					requestId);
+			throw new TSMSException(TSMSError.USER_NOT_FOUND);
+		}
 
 		LOGGER.info("END [REST-LAYER] [RequestId={}] updateApprovalStatus: timeTaken={}|response={}", requestId,
 				CommonUtils.getExecutionTime(startTime), CommonUtils.convertToString(response));
