@@ -55,7 +55,9 @@ public enum TSMSError {
 	DOCUMENT_CONVERSION_FAILED("051", 404, "Document conversion failed"),
 	DOCUMENT_UPLOAD_FAILD("052", 404, "Document upload failed"),
 	DOCUMENT_DELETE_FAILD("053", 404, "Document delete failed"),
-	USERNAME_NOT_FOUND("054", 404, "Username not found");
+	USERNAME_NOT_FOUND("054", 404, "Username not found"),
+	ACCOUNT_APPROVAL_EMAIL_SEND_API_CALL_FAILED("055", 404, "Account Approval Email Sending Api Call Failed"),
+	ACCOUNT_APPROVAL_EMAIL_SEND_FAILED("056", 404, "Account Approval Email Sending Failed");
 	
 	
 	private int status;
