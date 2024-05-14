@@ -88,7 +88,7 @@ public class ApprovalController {
 
 		TSMSResponse response = new TSMSResponse();
 
-		// Service Call.
+		// Service Call .
 		ApprovalStatus approvalStatus = null;
 		if (status.equals(ApprovalStatus.APPROVED.name())) {
 			approvalStatus = ApprovalStatus.APPROVED;
