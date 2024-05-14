@@ -165,13 +165,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new TSMSException(TSMSError.APPROVAL_FAILED);
 		}
 
-		if (response.getApprovalStatus().equals(ApprovalStatus.APPROVED)) {
-			// Call Send user activation email.
+		// Call Send Account Approval Email Api.
+		if (response.getApprovalStatus().equals(ApprovalStatus.APPROVED)
+				|| response.getApprovalStatus().equals(ApprovalStatus.REJECTED)) {
 
 			String recipientEmail = response.getEmail();
 
 			ResponseEntity<TSMSResponse> emailSendApiResponse = callAccountApprovalEmailSendRequestApi(recipientName,
-					recipientEmail, requestId);
+					recipientEmail, response.getApprovalStatus(), requestId);
+
 			if (emailSendApiResponse.getBody().getStatus() != 200) {
 				LOGGER.error("ERROR [SERVICE-LAYER] [RequestId={}]  register : error={}", requestId,
 						TSMSError.ACCOUNT_APPROVAL_EMAIL_SEND_FAILED.getMessage());
@@ -212,14 +214,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	private ResponseEntity<TSMSResponse> callAccountApprovalEmailSendRequestApi(String recipientName,
-			String recipientEmail, String requestId) throws TSMSException {
+			String recipientEmail, ApprovalStatus approvalStatus, String requestId) throws TSMSException {
 
 		long startTime = System.currentTimeMillis();
 		LOGGER.info(
 				"START [SERVICE-LAYER] [RequestId={}] callAccountApprovalEmailSendRequestApi: recipientName={}|recipientEmail={}",
 				requestId, recipientName, recipientEmail);
 
-		String requestBodyJson = generateAccountApprovalEmailSendRequestBodyJson(recipientName, recipientEmail);
+		String requestBodyJson = generateAccountApprovalEmailSendRequestBodyJson(recipientName, recipientEmail,
+				approvalStatus);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -245,8 +248,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	}
 
-	private String generateAccountApprovalEmailSendRequestBodyJson(String recipientName, String recipientEmail) {
-		return String.format("{\"recipientName\":\"%s\",\"recipientEmail\":\"%s\"}", recipientName, recipientEmail);
+	private String generateAccountApprovalEmailSendRequestBodyJson(String recipientName, String recipientEmail,
+			ApprovalStatus approvalStatus) {
+		return String.format("{\"recipientName\":\"%s\",\"recipientEmail\":\"%s\",\"approvalStatus\":\"%s\"}",
+				recipientName, recipientEmail, approvalStatus);
+
 	}
 
 }
