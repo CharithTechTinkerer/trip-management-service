@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import com.sep.tripmanagementservice.configuration.dto.response.TSMSResponse;
 import com.sep.tripmanagementservice.configuration.entity.Approval;
 import com.sep.tripmanagementservice.configuration.enums.ApprovalStatus;
+import com.sep.tripmanagementservice.configuration.enums.EmailType;
 import com.sep.tripmanagementservice.configuration.exception.TSMSError;
 import com.sep.tripmanagementservice.configuration.exception.TSMSException;
 import com.sep.tripmanagementservice.configuration.repository.ApprovalRepository;
@@ -35,8 +36,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Value("${defaultPageSize}")
 	private Integer defaultPageSize;
 
-	@Value("${accountApprovalEmailSendApi}")
-	private String AccountApprovalEmailSendApiUrl;
+	@Value("${emailSendApi}")
+	private String emailSendApi;
 
 	@Autowired
 	private ApprovalRepository repository;
@@ -232,7 +233,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 		ResponseEntity<TSMSResponse> response;
 
 		try {
-			response = restTemplate.postForEntity(AccountApprovalEmailSendApiUrl, requestEntity, TSMSResponse.class);
+			String AccountApprovalEmailSendUrl = emailSendApi.concat("&emailType=")
+					.concat(EmailType.ACCOUNT_APPROVAL.toString());
+			response = restTemplate.postForEntity(AccountApprovalEmailSendUrl, requestEntity, TSMSResponse.class);
 		} catch (Exception e) {
 			LOGGER.error(
 					"ERROR [SERVICE-LAYER] [RequestId={}]  callAccountApprovalEmailSendRequestApi : error={}|exception={}",
