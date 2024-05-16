@@ -270,6 +270,7 @@ public class UserController {
 		userDto.setFirstName(user.getFirstName());
 		userDto.setLastName(user.getLastName());
 		userDto.setEmail(user.getEmail());
+		userDto.setUserName(user.getUserName());
 		userDto.setNic(user.getNic());
 		if (user.getGender() != null) {
 			userDto.setGender(user.getGender().name());
