@@ -9,4 +9,11 @@ public class REST_CONTROLLER_URL {
 	public static final String REMOVE_TRIP_MEDIA = "/remove-trip-media";
 	public static final String REMOVE_TRIP = "/remove-trip";
 	
+	public static final String CREATE_SITE_CONTENT = "/create";
+	public static final String UPDATE_SITE_CONTENT = "/update";
+	public static final String GET_SITE_CONTENT = "/get-all";
+	public static final String REMOVE_SITE_CONTENT = "/remove";
+	public static final String UPDATE_SITE_CONTENT_MEDIA = "/update-media";
+
+
 }
