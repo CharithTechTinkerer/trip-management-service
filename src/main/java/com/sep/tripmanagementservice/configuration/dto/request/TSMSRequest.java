@@ -1,6 +1,7 @@
 package com.sep.tripmanagementservice.configuration.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sep.tripmanagementservice.configuration.dto.SiteContentDto;
 import com.sep.tripmanagementservice.configuration.dto.TripDto;
 import com.sep.tripmanagementservice.configuration.dto.UserDto;
 
@@ -15,7 +16,10 @@ import lombok.Setter;
 public class TSMSRequest {
 	private TripDto tripRequest;
 	private UserDto userDto;
+	private SiteContentDto siteContentDto;
 	private Long tripId;
 	private Long docId;
+	private Long siteContentId;
+
 
 }

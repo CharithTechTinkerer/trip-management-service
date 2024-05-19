@@ -57,8 +57,11 @@ public enum TSMSError {
 	DOCUMENT_DELETE_FAILD("053", 404, "Document delete failed"),
 	USERNAME_NOT_FOUND("054", 404, "Username not found"),
 	ACCOUNT_APPROVAL_EMAIL_SEND_API_CALL_FAILED("055", 404, "Account Approval Email Sending Api Call Failed"),
-	ACCOUNT_APPROVAL_EMAIL_SEND_FAILED("056", 404, "Account Approval Email Sending Failed");
-	
+	ACCOUNT_APPROVAL_EMAIL_SEND_FAILED("056", 404, "Account Approval Email Sending Failed"),
+	MORE_THAN_ONE_DOCUMENT_FOUND("057", 404, "More than one document found"),
+	NON_EXISTING_SITE_CONTENT_ID_FOR_USER("058", 400, "Non existing site content id for user");
+
+
 	
 	private int status;
 	private String code;
